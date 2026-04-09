@@ -26,8 +26,11 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 ## Estrutura observada
 
 ```text
+README.md
 src/main/java/br/com/edbruno/apiusuarios/ApiusuariosApplication.java
 src/main/java/br/com/edbruno/apiusuarios/controller/HelloController.java
+src/main/java/br/com/edbruno/apiusuarios/controller/UsuarioController.java
+src/main/java/br/com/edbruno/apiusuarios/model/Usuario.java
 src/main/resources/application.properties
 src/test/java/br/com/edbruno/apiusuarios/ApiusuariosApplicationTests.java
 pom.xml
@@ -40,9 +43,14 @@ pom.xml
 - Endpoint atual de estudo: `GET /hello` retorna `Olá, Spring Boot!`.
 - Endpoint atual de estudo: `GET /nome` retorna `Edbruno`.
 - Endpoint atual de estudo: `GET /mensagem` retorna `Estou aprendendo Spring Boot`.
+- Existe um controller de usuarios: `UsuarioController`.
+- Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios em memoria.
+- Endpoint atual de estudo: `POST /usuarios` adiciona um usuario recebido em JSON na lista em memoria.
+- Modelo atual: `Usuario` com `id`, `nome` e `email`.
 - Existe apenas o teste de contexto `contextLoads()`.
-- Nao ha entidade, DTO, service, repository ou configuracao de banco implementada.
-- Nao ha contrato de API documentado neste projeto ate este snapshot.
+- Nao ha service, repository ou configuracao de banco implementada.
+- Observacao: a lista de usuarios fica apenas em memoria e e perdida ao reiniciar a aplicacao.
+- O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida
 

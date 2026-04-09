@@ -20,6 +20,7 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 ## Dependencias principais
 
 - `spring-boot-starter-web`
+- `spring-boot-devtools`
 - `spring-boot-starter-test`
 
 ## Estrutura observada
@@ -37,6 +38,8 @@ pom.xml
 - A aplicacao sobe por `SpringApplication.run(ApiusuariosApplication.class, args)`.
 - Existe um controller simples: `HelloController`.
 - Endpoint atual de estudo: `GET /hello` retorna `Olá, Spring Boot!`.
+- Endpoint atual de estudo: `GET /nome` retorna `Edbruno`.
+- Endpoint atual de estudo: `GET /mensagem` retorna `Estou aprendendo Spring Boot`.
 - Existe apenas o teste de contexto `contextLoads()`.
 - Nao ha entidade, DTO, service, repository ou configuracao de banco implementada.
 - Nao ha contrato de API documentado neste projeto ate este snapshot.
@@ -46,6 +49,34 @@ pom.xml
 - `./mvnw test` passou em 2026-04-09 executando fora da sandbox restrita.
 - Observacao: dentro da sandbox restrita, o Mockito/Byte Buddy pode falhar ao inicializar por bloqueio no mecanismo de attach da JVM.
 - Essa falha de attach nao indicou problema na classe principal do Spring.
+
+## Comandos uteis
+
+Para executar a aplicacao:
+
+```bash
+mvn spring-boot:run
+```
+
+Durante os estudos, a dependencia `spring-boot-devtools` ajuda a reiniciar a aplicacao quando o codigo muda.
+
+Observacao simples:
+
+- O DevTools nao muda o codigo "ao vivo" dentro da JVM.
+- Ele observa arquivos compilados e reinicia o Spring quando percebe alteracao.
+- Se estiver rodando pelo terminal e nada reiniciar, salve o arquivo e compile novamente pelo editor/IDE.
+
+Opcao equivalente usando o Maven Wrapper do projeto:
+
+```bash
+./mvnw spring-boot:run
+```
+
+Para rodar os testes:
+
+```bash
+./mvnw test
+```
 
 ## Arquitetura pretendida para evolucao
 

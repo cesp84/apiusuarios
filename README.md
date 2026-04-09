@@ -248,7 +248,7 @@ Para estudar/editar no VS Code, instale a extensao `Lombok Annotations Support f
 - [x] Criar atualizacao temporaria
 - [x] Criar remocao temporaria
 - [x] Criar service inicial de usuarios
-- [ ] Mover regras do controller para o service
+- [x] Mover regras iniciais do controller para o service
 - [ ] Criar repository de usuarios
 - [ ] Configurar persistencia
 - [ ] Implementar CRUD de usuarios

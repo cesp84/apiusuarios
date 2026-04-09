@@ -55,10 +55,152 @@
 //     }
 // }
 
+// package br.com.edbruno.apiusuarios.controller;
+
+// // Importa a classe Usuario, que representa os dados de um usuario.
+// import br.com.edbruno.apiusuarios.model.Usuario;
+
+// // Importa a anotacao usada para criar endpoints do tipo DELETE.
+// import org.springframework.web.bind.annotation.DeleteMapping;
+
+// // Importa a anotacao usada para criar endpoints do tipo GET.
+// import org.springframework.web.bind.annotation.GetMapping;
+
+// // Importa a anotacao usada para pegar valores que vem na URL, como /usuarios/1.
+// import org.springframework.web.bind.annotation.PathVariable;
+
+// // Importa a anotacao usada para criar endpoints do tipo POST.
+// import org.springframework.web.bind.annotation.PostMapping;
+
+// // Importa a anotacao usada para criar endpoints do tipo PUT.
+// import org.springframework.web.bind.annotation.PutMapping;
+
+// // Importa a anotacao usada para definir o caminho principal deste controller.
+// import org.springframework.web.bind.annotation.RequestMapping;
+
+// // Importa a anotacao usada para receber dados enviados no corpo da requisicao.
+// import org.springframework.web.bind.annotation.RequestBody;
+
+// // Importa a anotacao usada para criar um controller REST.
+// import org.springframework.web.bind.annotation.RestController;
+
+// // Importa uma lista simples que pode crescer conforme adicionamos usuarios.
+// import java.util.ArrayList;
+
+// // Importa o tipo List, usado para representar uma lista de usuarios.
+// import java.util.List;
+
+// // Diz ao Spring: esta classe responde requisicoes HTTP.
+// @RestController
+
+// // Diz ao Spring: todos os endpoints desta classe comecam com /usuarios.
+// @RequestMapping("/usuarios")
+
+// // Agrupa os endpoints relacionados a usuarios.
+// public class UsuarioController {
+
+//     // Guarda os usuarios temporariamente em memoria.
+//     // Por enquanto, os dados somem quando a aplicacao reinicia.
+//     private final List<Usuario> usuarios = new ArrayList<>();
+
+//     // Diz ao Spring: quando alguem acessar GET /usuarios, execute este metodo.
+//     @GetMapping
+
+//     // Este metodo retorna todos os usuarios cadastrados na lista.
+//     public List<Usuario> listar() {
+//         return usuarios;
+//     }
+
+//     // Diz ao Spring: quando alguem acessar GET /usuarios/{id}, execute este metodo.
+//     @GetMapping("/{id}")
+
+//     // Este metodo busca um usuario pelo id recebido na URL.
+//     public Usuario buscarPorId(@PathVariable Long id) {
+
+//         // Percorre a lista procurando usuario por usuario.
+//         for (Usuario usuario : usuarios) {
+
+//             // Compara o id do usuario da lista com o id recebido na URL.
+//             if (usuario.getId().equals(id)) {
+
+//                 // Se encontrar, devolve o usuario como resposta.
+//                 return usuario;
+//             }
+//         }
+
+//         // Por enquanto, se nao encontrar, devolve null.
+//         // Mais para frente vamos tratar isso com resposta HTTP adequada.
+//         return null;
+//     }
+
+//     // Diz ao Spring: quando alguem acessar POST /usuarios, execute este metodo.
+//     @PostMapping
+
+//     // Este metodo recebe um usuario em JSON e salva na lista em memoria.
+//     public String criar(@RequestBody Usuario usuario) {
+//         usuarios.add(usuario);
+//         return "Usuário criado com sucesso: " + usuario.getNome();
+//     }
+
+//     // Diz ao Spring: quando alguem acessar PUT /usuarios/{id}, execute este metodo.
+//     @PutMapping("/{id}")
+
+//     // Este metodo atualiza nome e email de um usuario existente.
+//     public String atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+
+//         // Percorre a lista procurando o usuario que sera atualizado.
+//         for (Usuario usuario : usuarios) {
+
+//             // Confere se o id do usuario atual e igual ao id recebido na URL.
+//             if (usuario.getId().equals(id)) {
+
+//                 // Copia o novo nome recebido no JSON para o usuario salvo na lista.
+//                 usuario.setNome(usuarioAtualizado.getNome());
+
+//                 // Copia o novo email recebido no JSON para o usuario salvo na lista.
+//                 usuario.setEmail(usuarioAtualizado.getEmail());
+
+//                 // Encerra o metodo avisando que a atualizacao funcionou.
+//                 return "Usuário " + usuario.getNome() + " atualizado com sucesso";
+//             }
+//         }
+
+//         return "Usuário não encontrado";
+//     }
+
+//     // Diz ao Spring: quando alguem acessar DELETE /usuarios/{id}, execute este
+//     // metodo.
+//     @DeleteMapping("/{id}")
+
+//     // Este metodo remove um usuario pelo id recebido na URL.
+//     public String deletar(@PathVariable Long id) {
+
+//         // Percorre a lista procurando o usuario que sera removido.
+//         for (Usuario usuario : usuarios) {
+
+//             // Confere se encontrou o usuario com o id recebido na URL.
+//             if (usuario.getId().equals(id)) {
+
+//                 // Remove o usuario encontrado da lista em memoria.
+//                 usuarios.remove(usuario);
+
+//                 // Encerra o metodo avisando que a remocao funcionou.
+//                 return "Usuário " + usuario.getNome() + " removido com sucesso";
+//             }
+//         }
+
+//         return "Usuário não encontrado";
+//     }
+
+// }
+
 package br.com.edbruno.apiusuarios.controller;
 
-// Importa a classe Usuario, que representa os dados de um usuario.
+// Importa o model Usuario, usado no tipo de retorno e no corpo das requisicoes.
 import br.com.edbruno.apiusuarios.model.Usuario;
+
+// Importa o service que guarda a regra/operacoes de usuarios.
+import br.com.edbruno.apiusuarios.service.UsuarioService;
 
 // Importa a anotacao usada para criar endpoints do tipo DELETE.
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,7 +208,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 // Importa a anotacao usada para criar endpoints do tipo GET.
 import org.springframework.web.bind.annotation.GetMapping;
 
-// Importa a anotacao usada para pegar valores que vem na URL, como /usuarios/1.
+// Importa a anotacao usada para pegar valores da URL, como o id em /usuarios/1.
 import org.springframework.web.bind.annotation.PathVariable;
 
 // Importa a anotacao usada para criar endpoints do tipo POST.
@@ -75,121 +217,75 @@ import org.springframework.web.bind.annotation.PostMapping;
 // Importa a anotacao usada para criar endpoints do tipo PUT.
 import org.springframework.web.bind.annotation.PutMapping;
 
-// Importa a anotacao usada para definir o caminho principal deste controller.
+// Importa a anotacao usada para definir a rota principal do controller.
 import org.springframework.web.bind.annotation.RequestMapping;
 
-// Importa a anotacao usada para receber dados enviados no corpo da requisicao.
+// Importa a anotacao usada para ler o JSON enviado no corpo da requisicao.
 import org.springframework.web.bind.annotation.RequestBody;
 
 // Importa a anotacao usada para criar um controller REST.
 import org.springframework.web.bind.annotation.RestController;
 
-// Importa uma lista simples que pode crescer conforme adicionamos usuarios.
-import java.util.ArrayList;
-
-// Importa o tipo List, usado para representar uma lista de usuarios.
+// Importa o tipo List, usado para devolver varios usuarios.
 import java.util.List;
 
-// Diz ao Spring: esta classe responde requisicoes HTTP.
+// Diz ao Spring: esta classe recebe requisicoes HTTP e devolve respostas da API.
 @RestController
 
-// Diz ao Spring: todos os endpoints desta classe comecam com /usuarios.
+// Diz ao Spring: todas as rotas desta classe comecam com /usuarios.
 @RequestMapping("/usuarios")
 
-// Agrupa os endpoints relacionados a usuarios.
+// Controller de usuarios.
+// Responsabilidade: receber a requisicao e chamar o UsuarioService.
 public class UsuarioController {
 
-    // Guarda os usuarios temporariamente em memoria.
-    // Por enquanto, os dados somem quando a aplicacao reinicia.
-    private final List<Usuario> usuarios = new ArrayList<>();
+    // Service que contem as operacoes de usuarios.
+    private final UsuarioService usuarioService;
+
+    // Construtor usado pelo Spring para entregar um UsuarioService pronto.
+    public UsuarioController(UsuarioService usuarioService) {
+
+        // Guarda o service recebido para os metodos deste controller usarem.
+        this.usuarioService = usuarioService;
+    }
 
     // Diz ao Spring: quando alguem acessar GET /usuarios, execute este metodo.
     @GetMapping
 
-    // Este metodo retorna todos os usuarios cadastrados na lista.
+    // Lista usuarios chamando o service.
     public List<Usuario> listar() {
-        return usuarios;
+        return usuarioService.listar();
     }
 
     // Diz ao Spring: quando alguem acessar GET /usuarios/{id}, execute este metodo.
     @GetMapping("/{id}")
 
-    // Este metodo busca um usuario pelo id recebido na URL.
+    // Busca um usuario pelo id recebido na URL.
     public Usuario buscarPorId(@PathVariable Long id) {
-
-        // Percorre a lista procurando usuario por usuario.
-        for (Usuario usuario : usuarios) {
-
-            // Compara o id do usuario da lista com o id recebido na URL.
-            if (usuario.getId().equals(id)) {
-
-                // Se encontrar, devolve o usuario como resposta.
-                return usuario;
-            }
-        }
-
-        // Por enquanto, se nao encontrar, devolve null.
-        // Mais para frente vamos tratar isso com resposta HTTP adequada.
-        return null;
+        return usuarioService.buscarPorId(id);
     }
 
     // Diz ao Spring: quando alguem acessar POST /usuarios, execute este metodo.
     @PostMapping
 
-    // Este metodo recebe um usuario em JSON e salva na lista em memoria.
+    // Recebe um usuario em JSON e pede para o service cadastrar.
     public String criar(@RequestBody Usuario usuario) {
-        usuarios.add(usuario);
-        return "Usuário criado com sucesso";
+        return usuarioService.criar(usuario);
     }
 
     // Diz ao Spring: quando alguem acessar PUT /usuarios/{id}, execute este metodo.
     @PutMapping("/{id}")
 
-    // Este metodo atualiza nome e email de um usuario existente.
+    // Recebe o id pela URL, recebe os novos dados pelo JSON e pede para o service atualizar.
     public String atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
-
-        // Percorre a lista procurando o usuario que sera atualizado.
-        for (Usuario usuario : usuarios) {
-
-            // Confere se o id do usuario atual e igual ao id recebido na URL.
-            if (usuario.getId().equals(id)) {
-
-                // Copia o novo nome recebido no JSON para o usuario salvo na lista.
-                usuario.setNome(usuarioAtualizado.getNome());
-
-                // Copia o novo email recebido no JSON para o usuario salvo na lista.
-                usuario.setEmail(usuarioAtualizado.getEmail());
-
-                // Encerra o metodo avisando que a atualizacao funcionou.
-                return "Usuário atualizado com sucesso";
-            }
-        }
-
-        return "Usuário não encontrado";
+        return usuarioService.atualizar(id, usuarioAtualizado);
     }
 
-    // Diz ao Spring: quando alguem acessar DELETE /usuarios/{id}, execute este
-    // metodo.
+    // Diz ao Spring: quando alguem acessar DELETE /usuarios/{id}, execute este metodo.
     @DeleteMapping("/{id}")
 
-    // Este metodo remove um usuario pelo id recebido na URL.
+    // Recebe o id pela URL e pede para o service deletar.
     public String deletar(@PathVariable Long id) {
-
-        // Percorre a lista procurando o usuario que sera removido.
-        for (Usuario usuario : usuarios) {
-
-            // Confere se encontrou o usuario com o id recebido na URL.
-            if (usuario.getId().equals(id)) {
-
-                // Remove o usuario encontrado da lista em memoria.
-                usuarios.remove(usuario);
-
-                // Encerra o metodo avisando que a remocao funcionou.
-                return "Usuário removido com sucesso";
-            }
-        }
-
-        return "Usuário não encontrado";
+        return usuarioService.deletar(id);
     }
-
 }

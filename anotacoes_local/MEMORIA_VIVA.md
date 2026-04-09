@@ -56,8 +56,8 @@ pom.xml
 - O modelo `Usuario` usa Lombok para gerar getters, setters, construtor vazio e construtor completo.
 - Existe apenas o teste de contexto `contextLoads()`.
 - Nao ha repository ou configuracao de banco implementada.
-- Observacao: o `UsuarioService` ainda esta inicial e o `UsuarioController` ainda nao delega suas operacoes para ele.
-- Observacao: a lista de usuarios fica apenas em memoria e e perdida ao reiniciar a aplicacao.
+- Observacao: o `UsuarioController` delega as operacoes de usuarios para o `UsuarioService`.
+- Observacao: a lista de usuarios fica em memoria dentro do `UsuarioService` e e perdida ao reiniciar a aplicacao.
 - Observacao: busca por id ainda retorna `null` quando nao encontra usuario; mais tarde trocar por resposta HTTP adequada.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 

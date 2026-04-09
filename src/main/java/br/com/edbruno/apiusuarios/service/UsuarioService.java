@@ -228,93 +228,211 @@
 //         return "Usuário " + usuario.getNome() + " removido com sucesso";
 //     }
 // }
+// package br.com.edbruno.apiusuarios.service;
+
+// // Importa o model Usuario, que representa os dados da nossa API.
+// import br.com.edbruno.apiusuarios.model.Usuario;
+
+// // Importa o repository, responsavel por conversar com o banco.
+// import br.com.edbruno.apiusuarios.repository.UsuarioRepository;
+
+// // Importa a anotacao usada para registrar esta classe como service no Spring.
+// import org.springframework.stereotype.Service;
+
+// // Importa List, usado quando precisamos retornar varios usuarios.
+// import java.util.List;
+
+// // Diz ao Spring: esta classe e um service.
+// // Service guarda as operacoes do sistema.
+// @Service
+// public class UsuarioService {
+
+//     // Repository usado para salvar, buscar, listar e deletar usuarios no banco.
+//     private final UsuarioRepository usuarioRepository;
+
+//     // Construtor usado pelo Spring para entregar um UsuarioRepository pronto.
+//     public UsuarioService(UsuarioRepository usuarioRepository) {
+//         this.usuarioRepository = usuarioRepository;
+//     }
+
+//     // Busca todos os usuarios no banco.
+//     public List<Usuario> listar() {
+//         return usuarioRepository.findAll();
+//     }
+
+//     // Busca um usuario pelo id.
+//     public Usuario buscarPorId(Long id) {
+
+//         // findById procura no banco.
+//         // orElse(null) devolve null quando nao encontra.
+//         return usuarioRepository.findById(id).orElse(null);
+//     }
+
+//     // Cria um usuario novo.
+//     // Recebe o objeto Usuario que veio do controller.
+//     public Usuario criar(Usuario usuario) {
+
+//         // save salva no banco e devolve o usuario salvo.
+//         // Depois de salvar, o usuario ja pode vir com id gerado pelo banco.
+//         return usuarioRepository.save(usuario);
+//     }
+
+//     // Atualiza um usuario existente.
+//     // id vem da URL, usuarioAtualizado vem do JSON/body.
+//     public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
+
+//         // Primeiro procura o usuario atual no banco.
+//         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
+//         // Se nao encontrar, devolve null.
+//         // O controller usa esse null para responder 404.
+//         if (usuario == null) {
+//             return null;
+//         }
+
+//         // Copia os dados novos para o usuario encontrado no banco.
+//         usuario.setNome(usuarioAtualizado.getNome());
+//         usuario.setEmail(usuarioAtualizado.getEmail());
+
+//         // Salva as alteracoes e devolve o usuario atualizado.
+//         return usuarioRepository.save(usuario);
+//     }
+
+//     // Deleta um usuario pelo id.
+//     // Retorna true se deletou, false se nao encontrou.
+//     public boolean deletar(Long id) {
+
+//         // Procura antes de deletar.
+//         // Assim sabemos se o id existe.
+//         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
+//         // Se nao encontrou, avisa que nao deletou.
+//         if (usuario == null) {
+//             return false;
+//         }
+
+//         // Remove do banco pelo id.
+//         usuarioRepository.deleteById(id);
+
+//         // Avisa que a remocao funcionou.
+//         return true;
+//     }
+// }
+
 package br.com.edbruno.apiusuarios.service;
 
-// Importa o model Usuario, que representa os dados da nossa API.
+// Importa o DTO usado para entrada de dados.
+import br.com.edbruno.apiusuarios.dto.UsuarioRequestDTO;
+
+// Importa o DTO usado para saida de dados.
+import br.com.edbruno.apiusuarios.dto.UsuarioResponseDTO;
+
+// Importa a entidade Usuario, usada internamente para salvar no banco.
 import br.com.edbruno.apiusuarios.model.Usuario;
 
-// Importa o repository, responsavel por conversar com o banco.
+// Importa o repository, que conversa com o banco.
 import br.com.edbruno.apiusuarios.repository.UsuarioRepository;
 
-// Importa a anotacao usada para registrar esta classe como service no Spring.
+// Diz ao Spring: esta classe e um service.
 import org.springframework.stereotype.Service;
 
-// Importa List, usado quando precisamos retornar varios usuarios.
+// Importa List para devolver varios usuarios.
 import java.util.List;
 
-// Diz ao Spring: esta classe e um service.
-// Service guarda as operacoes do sistema.
+// Service de usuarios.
+// Responsabilidade: receber dados do controller, trabalhar com a entidade e devolver DTOs.
 @Service
 public class UsuarioService {
 
-    // Repository usado para salvar, buscar, listar e deletar usuarios no banco.
+    // Repository usado para acessar o banco.
     private final UsuarioRepository usuarioRepository;
 
-    // Construtor usado pelo Spring para entregar um UsuarioRepository pronto.
+    // Construtor usado pelo Spring para entregar o repository pronto.
     public UsuarioService(UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Busca todos os usuarios no banco.
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
+    // Lista todos os usuarios do banco e converte cada Usuario para UsuarioResponseDTO.
+    public List<UsuarioResponseDTO> listar() {
+        return usuarioRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
     }
 
-    // Busca um usuario pelo id.
-    public Usuario buscarPorId(Long id) {
-
-        // findById procura no banco.
-        // orElse(null) devolve null quando nao encontra.
-        return usuarioRepository.findById(id).orElse(null);
-    }
-
-    // Cria um usuario novo.
-    // Recebe o objeto Usuario que veio do controller.
-    public Usuario criar(Usuario usuario) {
-
-        // save salva no banco e devolve o usuario salvo.
-        // Depois de salvar, o usuario ja pode vir com id gerado pelo banco.
-        return usuarioRepository.save(usuario);
-    }
-
-    // Atualiza um usuario existente.
-    // id vem da URL, usuarioAtualizado vem do JSON/body.
-    public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
-
-        // Primeiro procura o usuario atual no banco.
+    // Busca um usuario pelo id e devolve o DTO de resposta.
+    public UsuarioResponseDTO buscarPorId(Long id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
 
-        // Se nao encontrar, devolve null.
-        // O controller usa esse null para responder 404.
+        // Se nao encontrou, devolve null.
+        // O controller usa isso para responder 404.
         if (usuario == null) {
             return null;
         }
 
-        // Copia os dados novos para o usuario encontrado no banco.
-        usuario.setNome(usuarioAtualizado.getNome());
-        usuario.setEmail(usuarioAtualizado.getEmail());
+        return toResponseDTO(usuario);
+    }
 
-        // Salva as alteracoes e devolve o usuario atualizado.
-        return usuarioRepository.save(usuario);
+    // Cria um usuario novo a partir do DTO recebido.
+    public UsuarioResponseDTO criar(UsuarioRequestDTO dto) {
+
+        // Cria a entidade que sera salva no banco.
+        Usuario usuario = new Usuario();
+
+        // Copia do DTO para a entidade apenas os campos existentes no model.
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+
+        // Observacao importante:
+        // dto.getSenha() existe no request, mas ainda nao existe no model Usuario.
+        // Isso significa que a senha NAO esta sendo salva neste momento.
+
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        // Converte a entidade salva para DTO de resposta.
+        return toResponseDTO(usuarioSalvo);
+    }
+
+    // Atualiza um usuario existente usando os dados do DTO.
+    public UsuarioResponseDTO atualizar(Long id, UsuarioRequestDTO dto) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
+        // Se nao encontrou, devolve null para o controller responder 404.
+        if (usuario == null) {
+            return null;
+        }
+
+        // Atualiza apenas os campos existentes no model.
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+
+        // Observacao importante:
+        // a senha ainda nao esta sendo salva porque o model Usuario nao tem campo senha.
+
+        Usuario usuarioAtualizado = usuarioRepository.save(usuario);
+
+        return toResponseDTO(usuarioAtualizado);
     }
 
     // Deleta um usuario pelo id.
-    // Retorna true se deletou, false se nao encontrou.
+    // Retorna true quando remove e false quando nao encontra.
     public boolean deletar(Long id) {
-
-        // Procura antes de deletar.
-        // Assim sabemos se o id existe.
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
 
-        // Se nao encontrou, avisa que nao deletou.
         if (usuario == null) {
             return false;
         }
 
-        // Remove do banco pelo id.
         usuarioRepository.deleteById(id);
-
-        // Avisa que a remocao funcionou.
         return true;
+    }
+
+    // Metodo auxiliar.
+    // Converte a entidade Usuario para o DTO de resposta.
+    private UsuarioResponseDTO toResponseDTO(Usuario usuario) {
+        return new UsuarioResponseDTO(
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail());
     }
 }

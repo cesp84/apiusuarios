@@ -224,4 +224,6 @@ public class Usuario {
 
     // Guarda o email do usuario.
     private String email;
+
+    private String senha;
 }

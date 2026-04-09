@@ -33,6 +33,8 @@ README.md
 src/main/java/br/com/edbruno/apiusuarios/ApiusuariosApplication.java
 src/main/java/br/com/edbruno/apiusuarios/controller/HelloController.java
 src/main/java/br/com/edbruno/apiusuarios/controller/UsuarioController.java
+src/main/java/br/com/edbruno/apiusuarios/dto/UsuarioRequestDTO.java
+src/main/java/br/com/edbruno/apiusuarios/dto/UsuarioResponseDTO.java
 src/main/java/br/com/edbruno/apiusuarios/model/Usuario.java
 src/main/java/br/com/edbruno/apiusuarios/repository/UsuarioRepository.java
 src/main/java/br/com/edbruno/apiusuarios/service/UsuarioService.java
@@ -51,10 +53,11 @@ pom.xml
 - Existe um controller de usuarios: `UsuarioController`.
 - Existe um service inicial de usuarios: `UsuarioService`.
 - Existe um repository inicial de usuarios: `UsuarioRepository`.
-- Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios pelo service/repository.
-- Endpoint atual de estudo: `GET /usuarios/{id}` retorna `200 OK` com usuario ou `404 NOT FOUND`.
-- Endpoint atual de estudo: `POST /usuarios` recebe um usuario em JSON, salva e retorna `201 CREATED` com o usuario salvo.
-- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome/email e retorna `200 OK` ou `404 NOT FOUND`.
+- Existem DTOs iniciais de usuarios: `UsuarioRequestDTO` e `UsuarioResponseDTO`.
+- Endpoint atual de estudo: `GET /usuarios` retorna uma lista de `UsuarioResponseDTO`.
+- Endpoint atual de estudo: `GET /usuarios/{id}` retorna `200 OK` com `UsuarioResponseDTO` ou `404 NOT FOUND`.
+- Endpoint atual de estudo: `POST /usuarios` recebe `UsuarioRequestDTO`, salva e retorna `201 CREATED` com `UsuarioResponseDTO`.
+- Endpoint atual de estudo: `PUT /usuarios/{id}` recebe `UsuarioRequestDTO`, atualiza nome/email e retorna `200 OK` ou `404 NOT FOUND`.
 - Endpoint atual de estudo: `DELETE /usuarios/{id}` remove usuario e retorna `204 NO CONTENT` ou `404 NOT FOUND`.
 - Modelo atual: `Usuario` com `id`, `nome` e `email`.
 - O modelo `Usuario` esta marcado como entidade JPA com `@Entity`.
@@ -63,10 +66,13 @@ pom.xml
 - Observacao: o `UsuarioController` delega as operacoes de usuarios para o `UsuarioService`.
 - Observacao: o `UsuarioService` delega acesso a dados para `UsuarioRepository`.
 - Observacao: o `UsuarioController` usa `ResponseEntity` para controlar status HTTP e corpo da resposta.
-- Observacao: no fluxo atual, o service retorna `Usuario`, `null` ou `boolean`; o controller decide o status HTTP.
+- Observacao: no fluxo atual, o service recebe `UsuarioRequestDTO`, trabalha internamente com `Usuario` e devolve `UsuarioResponseDTO`.
+- Observacao: os DTOs ajudam a separar o que entra e o que sai da API do model interno.
 - Observacao: configuracao atual aponta para H2 em memoria: `jdbc:h2:mem:apiusuarios`.
 - Observacao: por enquanto, o H2 esta em memoria e os dados sao perdidos ao reiniciar a aplicacao.
 - Observacao: o service ainda usa `null` quando nao encontra usuario, mas o controller converte esse caso para `404 NOT FOUND`.
+- Observacao importante: `UsuarioRequestDTO` ja possui o campo `senha`, mas o model `Usuario` ainda nao possui esse campo.
+- Observacao importante: no comportamento atual, a `senha` recebida no request nao esta sendo persistida nem devolvida na resposta.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida

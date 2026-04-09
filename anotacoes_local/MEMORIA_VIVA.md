@@ -22,6 +22,8 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 - `spring-boot-starter-web`
 - `spring-boot-devtools`
 - `lombok`
+- `spring-boot-starter-data-jpa`
+- `h2`
 - `spring-boot-starter-test`
 
 ## Estrutura observada
@@ -32,6 +34,7 @@ src/main/java/br/com/edbruno/apiusuarios/ApiusuariosApplication.java
 src/main/java/br/com/edbruno/apiusuarios/controller/HelloController.java
 src/main/java/br/com/edbruno/apiusuarios/controller/UsuarioController.java
 src/main/java/br/com/edbruno/apiusuarios/model/Usuario.java
+src/main/java/br/com/edbruno/apiusuarios/repository/UsuarioRepository.java
 src/main/java/br/com/edbruno/apiusuarios/service/UsuarioService.java
 src/main/resources/application.properties
 src/test/java/br/com/edbruno/apiusuarios/ApiusuariosApplicationTests.java
@@ -47,17 +50,20 @@ pom.xml
 - Endpoint atual de estudo: `GET /mensagem` retorna `Estou aprendendo Spring Boot`.
 - Existe um controller de usuarios: `UsuarioController`.
 - Existe um service inicial de usuarios: `UsuarioService`.
-- Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios em memoria.
-- Endpoint atual de estudo: `GET /usuarios/{id}` busca um usuario em memoria pelo id.
-- Endpoint atual de estudo: `POST /usuarios` adiciona um usuario recebido em JSON na lista em memoria.
-- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome e email de um usuario em memoria.
-- Endpoint atual de estudo: `DELETE /usuarios/{id}` remove um usuario em memoria.
+- Existe um repository inicial de usuarios: `UsuarioRepository`.
+- Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios pelo service/repository.
+- Endpoint atual de estudo: `GET /usuarios/{id}` busca um usuario pelo id usando service/repository.
+- Endpoint atual de estudo: `POST /usuarios` recebe um usuario em JSON e salva pelo service/repository.
+- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome e email de um usuario.
+- Endpoint atual de estudo: `DELETE /usuarios/{id}` remove um usuario.
 - Modelo atual: `Usuario` com `id`, `nome` e `email`.
-- O modelo `Usuario` usa Lombok para gerar getters, setters, construtor vazio e construtor completo.
+- O modelo `Usuario` esta marcado como entidade JPA com `@Entity`.
+- O campo `id` do `Usuario` esta marcado com `@Id` e `@GeneratedValue`.
 - Existe apenas o teste de contexto `contextLoads()`.
-- Nao ha repository ou configuracao de banco implementada.
 - Observacao: o `UsuarioController` delega as operacoes de usuarios para o `UsuarioService`.
-- Observacao: a lista de usuarios fica em memoria dentro do `UsuarioService` e e perdida ao reiniciar a aplicacao.
+- Observacao: o `UsuarioService` delega acesso a dados para `UsuarioRepository`.
+- Observacao: configuracao atual aponta para H2 em memoria: `jdbc:h2:mem:apiusuarios`.
+- Observacao: por enquanto, o H2 esta em memoria e os dados sao perdidos ao reiniciar a aplicacao.
 - Observacao: busca por id ainda retorna `null` quando nao encontra usuario; mais tarde trocar por resposta HTTP adequada.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 

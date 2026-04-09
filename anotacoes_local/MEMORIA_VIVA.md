@@ -52,19 +52,21 @@ pom.xml
 - Existe um service inicial de usuarios: `UsuarioService`.
 - Existe um repository inicial de usuarios: `UsuarioRepository`.
 - Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios pelo service/repository.
-- Endpoint atual de estudo: `GET /usuarios/{id}` busca um usuario pelo id usando service/repository.
-- Endpoint atual de estudo: `POST /usuarios` recebe um usuario em JSON e salva pelo service/repository.
-- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome e email de um usuario.
-- Endpoint atual de estudo: `DELETE /usuarios/{id}` remove um usuario.
+- Endpoint atual de estudo: `GET /usuarios/{id}` retorna `200 OK` com usuario ou `404 NOT FOUND`.
+- Endpoint atual de estudo: `POST /usuarios` recebe um usuario em JSON, salva e retorna `201 CREATED` com o usuario salvo.
+- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome/email e retorna `200 OK` ou `404 NOT FOUND`.
+- Endpoint atual de estudo: `DELETE /usuarios/{id}` remove usuario e retorna `204 NO CONTENT` ou `404 NOT FOUND`.
 - Modelo atual: `Usuario` com `id`, `nome` e `email`.
 - O modelo `Usuario` esta marcado como entidade JPA com `@Entity`.
 - O campo `id` do `Usuario` esta marcado com `@Id` e `@GeneratedValue`.
 - Existe apenas o teste de contexto `contextLoads()`.
 - Observacao: o `UsuarioController` delega as operacoes de usuarios para o `UsuarioService`.
 - Observacao: o `UsuarioService` delega acesso a dados para `UsuarioRepository`.
+- Observacao: o `UsuarioController` usa `ResponseEntity` para controlar status HTTP e corpo da resposta.
+- Observacao: no fluxo atual, o service retorna `Usuario`, `null` ou `boolean`; o controller decide o status HTTP.
 - Observacao: configuracao atual aponta para H2 em memoria: `jdbc:h2:mem:apiusuarios`.
 - Observacao: por enquanto, o H2 esta em memoria e os dados sao perdidos ao reiniciar a aplicacao.
-- Observacao: busca por id ainda retorna `null` quando nao encontra usuario; mais tarde trocar por resposta HTTP adequada.
+- Observacao: o service ainda usa `null` quando nao encontra usuario, mas o controller converte esse caso para `404 NOT FOUND`.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida

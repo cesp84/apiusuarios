@@ -147,6 +147,87 @@
 // }
 // }
 
+// package br.com.edbruno.apiusuarios.service;
+
+// // Importa o model Usuario, que representa os dados da nossa API.
+// import br.com.edbruno.apiusuarios.model.Usuario;
+
+// // Importa o repository, responsavel por conversar com o banco.
+// import br.com.edbruno.apiusuarios.repository.UsuarioRepository;
+
+// // Importa a anotacao usada para registrar esta classe como service no Spring.
+// import org.springframework.stereotype.Service;
+
+// // Importa o tipo List, usado para retornar varios usuarios.
+// import java.util.List;
+
+// // Diz ao Spring: esta classe e um service.
+// // Service e a camada onde colocamos as operacoes do sistema.
+// @Service
+// public class UsuarioService {
+
+//     // Repository usado pelo service para acessar a tabela de usuarios.
+//     private final UsuarioRepository usuarioRepository;
+
+//     // Construtor usado pelo Spring para entregar um UsuarioRepository pronto.
+//     public UsuarioService(UsuarioRepository usuarioRepository) {
+//         this.usuarioRepository = usuarioRepository;
+//     }
+
+//     // Lista todos os usuarios salvos no banco.
+//     public List<Usuario> listar() {
+//         return usuarioRepository.findAll();
+//     }
+
+//     // Busca um usuario pelo id.
+//     public Usuario buscarPorId(Long id) {
+//         return usuarioRepository.findById(id).orElse(null);
+//     }
+
+//     // Salva um usuario novo no banco.
+//     public String criar(Usuario usuario) {
+//         usuarioRepository.save(usuario);
+//         return "Usuário criado com sucesso: " + usuario.getNome();
+//     }
+
+//     // Atualiza nome e email de um usuario existente.
+//     public String atualizar(Long id, Usuario usuarioAtualizado) {
+
+//         // Procura no banco o usuario que tem o id recebido.
+//         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
+//         // Se nao encontrou, encerra avisando.
+//         if (usuario == null) {
+//             return "Usuário não encontrado";
+//         }
+
+//         // Copia os novos dados recebidos no JSON.
+//         usuario.setNome(usuarioAtualizado.getNome());
+//         usuario.setEmail(usuarioAtualizado.getEmail());
+
+//         // Salva no banco o usuario atualizado.
+//         usuarioRepository.save(usuario);
+
+//         return "Usuário " + usuario.getNome() + " atualizado com sucesso";
+//     }
+
+//     // Remove um usuario do banco usando o id.
+//     public String deletar(Long id) {
+
+//         // Procura primeiro para saber se o usuario existe e pegar o nome dele.
+//         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+
+//         // Se nao encontrou, encerra avisando.
+//         if (usuario == null) {
+//             return "Usuário não encontrado";
+//         }
+
+//         // Deleta no banco pelo id.
+//         usuarioRepository.deleteById(id);
+
+//         return "Usuário " + usuario.getNome() + " removido com sucesso";
+//     }
+// }
 package br.com.edbruno.apiusuarios.service;
 
 // Importa o model Usuario, que representa os dados da nossa API.
@@ -158,15 +239,15 @@ import br.com.edbruno.apiusuarios.repository.UsuarioRepository;
 // Importa a anotacao usada para registrar esta classe como service no Spring.
 import org.springframework.stereotype.Service;
 
-// Importa o tipo List, usado para retornar varios usuarios.
+// Importa List, usado quando precisamos retornar varios usuarios.
 import java.util.List;
 
 // Diz ao Spring: esta classe e um service.
-// Service e a camada onde colocamos as operacoes do sistema.
+// Service guarda as operacoes do sistema.
 @Service
 public class UsuarioService {
 
-    // Repository usado pelo service para acessar a tabela de usuarios.
+    // Repository usado para salvar, buscar, listar e deletar usuarios no banco.
     private final UsuarioRepository usuarioRepository;
 
     // Construtor usado pelo Spring para entregar um UsuarioRepository pronto.
@@ -174,57 +255,66 @@ public class UsuarioService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // Lista todos os usuarios salvos no banco.
+    // Busca todos os usuarios no banco.
     public List<Usuario> listar() {
         return usuarioRepository.findAll();
     }
 
     // Busca um usuario pelo id.
     public Usuario buscarPorId(Long id) {
+
+        // findById procura no banco.
+        // orElse(null) devolve null quando nao encontra.
         return usuarioRepository.findById(id).orElse(null);
     }
 
-    // Salva um usuario novo no banco.
-    public String criar(Usuario usuario) {
-        usuarioRepository.save(usuario);
-        return "Usuário criado com sucesso: " + usuario.getNome();
+    // Cria um usuario novo.
+    // Recebe o objeto Usuario que veio do controller.
+    public Usuario criar(Usuario usuario) {
+
+        // save salva no banco e devolve o usuario salvo.
+        // Depois de salvar, o usuario ja pode vir com id gerado pelo banco.
+        return usuarioRepository.save(usuario);
     }
 
-    // Atualiza nome e email de um usuario existente.
-    public String atualizar(Long id, Usuario usuarioAtualizado) {
+    // Atualiza um usuario existente.
+    // id vem da URL, usuarioAtualizado vem do JSON/body.
+    public Usuario atualizar(Long id, Usuario usuarioAtualizado) {
 
-        // Procura no banco o usuario que tem o id recebido.
+        // Primeiro procura o usuario atual no banco.
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
 
-        // Se nao encontrou, encerra avisando.
+        // Se nao encontrar, devolve null.
+        // O controller usa esse null para responder 404.
         if (usuario == null) {
-            return "Usuário não encontrado";
+            return null;
         }
 
-        // Copia os novos dados recebidos no JSON.
+        // Copia os dados novos para o usuario encontrado no banco.
         usuario.setNome(usuarioAtualizado.getNome());
         usuario.setEmail(usuarioAtualizado.getEmail());
 
-        // Salva no banco o usuario atualizado.
-        usuarioRepository.save(usuario);
-
-        return "Usuário " + usuario.getNome() + " atualizado com sucesso";
+        // Salva as alteracoes e devolve o usuario atualizado.
+        return usuarioRepository.save(usuario);
     }
 
-    // Remove um usuario do banco usando o id.
-    public String deletar(Long id) {
+    // Deleta um usuario pelo id.
+    // Retorna true se deletou, false se nao encontrou.
+    public boolean deletar(Long id) {
 
-        // Procura primeiro para saber se o usuario existe e pegar o nome dele.
+        // Procura antes de deletar.
+        // Assim sabemos se o id existe.
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
 
-        // Se nao encontrou, encerra avisando.
+        // Se nao encontrou, avisa que nao deletou.
         if (usuario == null) {
-            return "Usuário não encontrado";
+            return false;
         }
 
-        // Deleta no banco pelo id.
+        // Remove do banco pelo id.
         usuarioRepository.deleteById(id);
 
-        return "Usuário " + usuario.getNome() + " removido com sucesso";
+        // Avisa que a remocao funcionou.
+        return true;
     }
 }

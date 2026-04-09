@@ -306,29 +306,102 @@
 // }
 // }
 
+// package br.com.edbruno.apiusuarios.controller;
+
+// // Importa o model Usuario, usado para receber/enviar dados de usuario.
+// import br.com.edbruno.apiusuarios.model.Usuario;
+
+// // Importa o service, onde ficam as operacoes de usuario.
+// import br.com.edbruno.apiusuarios.service.UsuarioService;
+
+// // Importa as anotacoes REST do Spring.
+// import org.springframework.web.bind.annotation.*;
+
+// // Importa List, usado para retornar varios usuarios.
+// import java.util.List;
+
+// // Diz ao Spring: esta classe responde requisicoes HTTP e devolve dados.
+// @RestController
+
+// // Diz ao Spring: todas as rotas deste controller comecam com /usuarios.
+// @RequestMapping("/usuarios")
+// public class UsuarioController {
+
+//     // Service usado pelo controller.
+//     // O controller recebe a requisicao e passa o trabalho para o service.
+//     private final UsuarioService usuarioService;
+
+//     // Construtor usado pelo Spring para entregar o UsuarioService pronto.
+//     public UsuarioController(UsuarioService usuarioService) {
+//         this.usuarioService = usuarioService;
+//     }
+
+//     // Endpoint GET /usuarios
+//     // Lista todos os usuarios.
+//     @GetMapping
+//     public List<Usuario> listar() {
+//         return usuarioService.listar();
+//     }
+
+//     // Endpoint GET /usuarios/{id}
+//     // Busca um usuario pelo id que veio na URL.
+//     @GetMapping("/{id}")
+//     public Usuario buscarPorId(@PathVariable Long id) {
+//         return usuarioService.buscarPorId(id);
+//     }
+
+//     // Endpoint POST /usuarios
+//     // Recebe um JSON no body e cria um usuario.
+//     @PostMapping
+//     public String criar(@RequestBody Usuario usuario) {
+//         return usuarioService.criar(usuario);
+//     }
+
+//     // Endpoint PUT /usuarios/{id}
+//     // Recebe o id pela URL e os dados novos pelo body.
+//     @PutMapping("/{id}")
+//     public String atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+//         return usuarioService.atualizar(id, usuarioAtualizado);
+//     }
+
+//     // Endpoint DELETE /usuarios/{id}
+//     // Remove um usuario pelo id.
+//     @DeleteMapping("/{id}")
+//     public String deletar(@PathVariable Long id) {
+//         return usuarioService.deletar(id);
+//     }
+// }
+
 package br.com.edbruno.apiusuarios.controller;
 
-// Importa o model Usuario, usado para receber/enviar dados de usuario.
+// Importa o model Usuario, usado no corpo das respostas e requisicoes.
 import br.com.edbruno.apiusuarios.model.Usuario;
 
-// Importa o service, onde ficam as operacoes de usuario.
+// Importa o service, que executa as operacoes de usuarios.
 import br.com.edbruno.apiusuarios.service.UsuarioService;
+
+// Importa status HTTP, como 201 CREATED.
+import org.springframework.http.HttpStatus;
+
+// ResponseEntity permite devolver corpo + status HTTP.
+// Exemplo: 200 OK, 201 CREATED, 404 NOT FOUND.
+import org.springframework.http.ResponseEntity;
 
 // Importa as anotacoes REST do Spring.
 import org.springframework.web.bind.annotation.*;
 
-// Importa List, usado para retornar varios usuarios.
+// Importa List, usado para devolver varios usuarios.
 import java.util.List;
 
-// Diz ao Spring: esta classe responde requisicoes HTTP e devolve dados.
+// Diz ao Spring: esta classe recebe requisicoes HTTP e devolve respostas REST.
 @RestController
 
-// Diz ao Spring: todas as rotas deste controller comecam com /usuarios.
+// Diz ao Spring: todas as rotas desta classe comecam com /usuarios.
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
     // Service usado pelo controller.
-    // O controller recebe a requisicao e passa o trabalho para o service.
+    // O controller recebe HTTP; o service executa a operacao.
     private final UsuarioService usuarioService;
 
     // Construtor usado pelo Spring para entregar o UsuarioService pronto.
@@ -337,37 +410,79 @@ public class UsuarioController {
     }
 
     // Endpoint GET /usuarios
-    // Lista todos os usuarios.
+    // ResponseEntity<List<Usuario>> significa: resposta HTTP com uma lista no corpo.
     @GetMapping
-    public List<Usuario> listar() {
-        return usuarioService.listar();
+    public ResponseEntity<List<Usuario>> listar() {
+
+        // Pede ao service todos os usuarios.
+        List<Usuario> usuarios = usuarioService.listar();
+
+        // Devolve 200 OK com a lista de usuarios no corpo da resposta.
+        return ResponseEntity.ok(usuarios);
     }
 
     // Endpoint GET /usuarios/{id}
-    // Busca um usuario pelo id que veio na URL.
+    // Busca um usuario especifico.
     @GetMapping("/{id}")
-    public Usuario buscarPorId(@PathVariable Long id) {
-        return usuarioService.buscarPorId(id);
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
+
+        // Pede ao service para buscar pelo id recebido na URL.
+        Usuario usuario = usuarioService.buscarPorId(id);
+
+        // Se nao encontrou, responde 404 NOT FOUND.
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Se encontrou, responde 200 OK com o usuario no corpo.
+        return ResponseEntity.ok(usuario);
     }
 
     // Endpoint POST /usuarios
-    // Recebe um JSON no body e cria um usuario.
+    // Cria um usuario novo com o JSON enviado no body.
     @PostMapping
-    public String criar(@RequestBody Usuario usuario) {
-        return usuarioService.criar(usuario);
+    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
+
+        // Pede ao service para salvar o usuario.
+        Usuario usuarioSalvo = usuarioService.criar(usuario);
+
+        // Responde 201 CREATED com o usuario salvo no corpo.
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
     // Endpoint PUT /usuarios/{id}
-    // Recebe o id pela URL e os dados novos pelo body.
+    // Atualiza um usuario existente.
     @PutMapping("/{id}")
-    public String atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
-        return usuarioService.atualizar(id, usuarioAtualizado);
+    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuarioAtualizado) {
+
+        // Pede ao service para atualizar.
+        Usuario usuario = usuarioService.atualizar(id, usuarioAtualizado);
+
+        // Se o service devolveu null, o usuario nao foi encontrado.
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Responde 200 OK com o usuario atualizado no corpo.
+        return ResponseEntity.ok(usuario);
     }
 
     // Endpoint DELETE /usuarios/{id}
-    // Remove um usuario pelo id.
+    // Remove um usuario.
     @DeleteMapping("/{id}")
-    public String deletar(@PathVariable Long id) {
-        return usuarioService.deletar(id);
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+
+        // Pede ao service para remover.
+        // true = removeu, false = nao encontrou.
+        boolean removido = usuarioService.deletar(id);
+
+        // Se nao removeu, responde 404 NOT FOUND.
+        if (!removido) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Se removeu, responde 204 NO CONTENT.
+        // Significa: deu certo, mas nao vou devolver corpo.
+        return ResponseEntity.noContent().build();
     }
 }

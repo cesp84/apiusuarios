@@ -21,6 +21,7 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 
 - `spring-boot-starter-web`
 - `spring-boot-devtools`
+- `lombok`
 - `spring-boot-starter-test`
 
 ## Estrutura observada
@@ -47,6 +48,7 @@ pom.xml
 - Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios em memoria.
 - Endpoint atual de estudo: `POST /usuarios` adiciona um usuario recebido em JSON na lista em memoria.
 - Modelo atual: `Usuario` com `id`, `nome` e `email`.
+- O modelo `Usuario` usa Lombok para gerar getters, setters, construtor vazio e construtor completo.
 - Existe apenas o teste de contexto `contextLoads()`.
 - Nao ha service, repository ou configuracao de banco implementada.
 - Observacao: a lista de usuarios fica apenas em memoria e e perdida ao reiniciar a aplicacao.

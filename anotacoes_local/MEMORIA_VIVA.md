@@ -32,6 +32,7 @@ src/main/java/br/com/edbruno/apiusuarios/ApiusuariosApplication.java
 src/main/java/br/com/edbruno/apiusuarios/controller/HelloController.java
 src/main/java/br/com/edbruno/apiusuarios/controller/UsuarioController.java
 src/main/java/br/com/edbruno/apiusuarios/model/Usuario.java
+src/main/java/br/com/edbruno/apiusuarios/service/UsuarioService.java
 src/main/resources/application.properties
 src/test/java/br/com/edbruno/apiusuarios/ApiusuariosApplicationTests.java
 pom.xml
@@ -45,13 +46,19 @@ pom.xml
 - Endpoint atual de estudo: `GET /nome` retorna `Edbruno`.
 - Endpoint atual de estudo: `GET /mensagem` retorna `Estou aprendendo Spring Boot`.
 - Existe um controller de usuarios: `UsuarioController`.
+- Existe um service inicial de usuarios: `UsuarioService`.
 - Endpoint atual de estudo: `GET /usuarios` retorna a lista de usuarios em memoria.
+- Endpoint atual de estudo: `GET /usuarios/{id}` busca um usuario em memoria pelo id.
 - Endpoint atual de estudo: `POST /usuarios` adiciona um usuario recebido em JSON na lista em memoria.
+- Endpoint atual de estudo: `PUT /usuarios/{id}` atualiza nome e email de um usuario em memoria.
+- Endpoint atual de estudo: `DELETE /usuarios/{id}` remove um usuario em memoria.
 - Modelo atual: `Usuario` com `id`, `nome` e `email`.
 - O modelo `Usuario` usa Lombok para gerar getters, setters, construtor vazio e construtor completo.
 - Existe apenas o teste de contexto `contextLoads()`.
-- Nao ha service, repository ou configuracao de banco implementada.
+- Nao ha repository ou configuracao de banco implementada.
+- Observacao: o `UsuarioService` ainda esta inicial e o `UsuarioController` ainda nao delega suas operacoes para ele.
 - Observacao: a lista de usuarios fica apenas em memoria e e perdida ao reiniciar a aplicacao.
+- Observacao: busca por id ainda retorna `null` quando nao encontra usuario; mais tarde trocar por resposta HTTP adequada.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida
@@ -87,6 +94,67 @@ Para rodar os testes:
 ```bash
 ./mvnw test
 ```
+
+Para fazer uma verificacao mais completa depois de mexer em dependencias:
+
+```bash
+./mvnw clean install
+```
+
+## Resumo de estudo - Uso do Lombok
+
+Neste projeto, usamos Lombok na classe `Usuario` para reduzir codigo repetitivo.
+
+Dependencia adicionada no `pom.xml`:
+
+- `org.projectlombok:lombok`
+
+Anotacoes usadas em `Usuario`:
+
+- `@Getter`: gera automaticamente os metodos `get`.
+- `@Setter`: gera automaticamente os metodos `set`.
+- `@NoArgsConstructor`: cria o construtor vazio `Usuario()`.
+- `@AllArgsConstructor`: cria o construtor com todos os atributos.
+
+Configuracao recomendada no VS Code:
+
+- Instalar a extensao `Lombok Annotations Support for VS Code`.
+- Se a IDE continuar acusando erro em `@Getter`, `@Setter` etc., reiniciar o VS Code depois da instalacao.
+
+O que aconteceu na pratica:
+
+- Antes, os getters, setters e construtores eram escritos manualmente.
+- Agora, o Lombok gera esse codigo automaticamente em tempo de compilacao.
+- O Jackson continua conseguindo converter JSON em objeto `Usuario`.
+
+Regra importante:
+
+- Lombok nao substitui Jackson.
+- Lombok automatiza codigo Java repetitivo.
+- Jackson converte JSON em objeto e objeto em JSON.
+
+Fluxo mental do POST JSON:
+
+```json
+{
+  "id": 1,
+  "nome": "Edbruno",
+  "email": "ed@email.com"
+}
+```
+
+Na pratica, o Spring/Jackson consegue fazer algo equivalente a:
+
+```text
+new Usuario()
+setId(...)
+setNome(...)
+setEmail(...)
+```
+
+Frase para lembrar:
+
+> Lombok escreve o codigo que eu nao quero repetir, mas o Spring continua usando ele normalmente.
 
 ## Arquitetura pretendida para evolucao
 

@@ -23,6 +23,7 @@ A evolucao planejada inclui cadastro, consulta, atualizacao e remocao de usuario
 - Spring Boot 3.5.13
 - Spring Web
 - Spring Boot DevTools
+- Lombok
 - Maven
 - JUnit / Spring Boot Test
 
@@ -50,6 +51,8 @@ apiusuarios/
     |   |       +-- UsuarioController.java
     |   |   +-- model/
     |   |       +-- Usuario.java
+    |   |   +-- service/
+    |   |       +-- UsuarioService.java
     |   +-- resources/
     |       +-- application.properties
     +-- test/
@@ -114,6 +117,56 @@ Resposta atual:
 Usuário criado com sucesso
 ```
 
+### Buscar usuario por id
+
+```http
+GET /usuarios/1
+```
+
+Resposta quando encontrar:
+
+```json
+{
+  "id": 1,
+  "nome": "Edbruno",
+  "email": "edbruno@email.com"
+}
+```
+
+### Atualizar usuario em memoria
+
+```http
+PUT /usuarios/1
+Content-Type: application/json
+```
+
+Exemplo de corpo da requisicao:
+
+```json
+{
+  "nome": "Edbruno Silva",
+  "email": "edbruno.silva@email.com"
+}
+```
+
+Resposta atual:
+
+```text
+Usuário atualizado com sucesso
+```
+
+### Remover usuario em memoria
+
+```http
+DELETE /usuarios/1
+```
+
+Resposta atual:
+
+```text
+Usuário removido com sucesso
+```
+
 ### Verificar resposta do Spring Boot
 
 ```http
@@ -158,6 +211,12 @@ Execute:
 ./mvnw test
 ```
 
+Para fazer uma verificacao completa, especialmente depois de alterar dependencias:
+
+```bash
+./mvnw clean install
+```
+
 ## Observacao Sobre Desenvolvimento
 
 O projeto usa `spring-boot-devtools`.
@@ -165,6 +224,16 @@ O projeto usa `spring-boot-devtools`.
 Essa dependencia ajuda durante o desenvolvimento porque pode reiniciar a aplicacao quando o codigo muda.
 
 Se a aplicacao estiver rodando e uma alteracao nao aparecer no navegador, salve o arquivo e garanta que a IDE compilou o projeto novamente.
+
+## Lombok
+
+O projeto usa Lombok no modelo `Usuario` para reduzir codigo repetitivo.
+
+Atualmente ele gera getters, setters, construtor vazio e construtor com todos os atributos.
+
+O Lombok nao substitui o Jackson: ele apenas gera metodos e construtores que ajudam o objeto Java a continuar funcionando normalmente.
+
+Para estudar/editar no VS Code, instale a extensao `Lombok Annotations Support for VS Code`.
 
 ## Roadmap
 
@@ -174,7 +243,12 @@ Se a aplicacao estiver rodando e uma alteracao nao aparecer no navegador, salve 
 - [x] Criar controller de usuarios
 - [x] Criar modelo de usuario
 - [x] Criar cadastro temporario em memoria
-- [ ] Criar service de usuarios
+- [x] Criar listagem temporaria de usuarios
+- [x] Criar busca temporaria por id
+- [x] Criar atualizacao temporaria
+- [x] Criar remocao temporaria
+- [x] Criar service inicial de usuarios
+- [ ] Mover regras do controller para o service
 - [ ] Criar repository de usuarios
 - [ ] Configurar persistencia
 - [ ] Implementar CRUD de usuarios

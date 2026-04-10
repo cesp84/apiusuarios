@@ -1,5 +1,10 @@
 package br.com.edbruno.apiusuarios.service;
 
+// DTO usado na requisicao de login.
+import br.com.edbruno.apiusuarios.dto.LoginRequestDTO;
+
+// DTO usado na resposta de login.
+import br.com.edbruno.apiusuarios.dto.LoginResponseDTO;
 // Importa o DTO usado para entrada de dados.
 import br.com.edbruno.apiusuarios.dto.UsuarioRequestDTO;
 
@@ -109,6 +114,31 @@ public class UsuarioService {
         // Remove do banco pelo id.
         usuarioRepository.deleteById(id);
         return true;
+    }
+
+    // Faz o login do usuario.
+    // Recebe email e senha, procura o usuario e valida a senha.
+    public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        // Procura no banco um usuario com o email recebido.
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+                .orElse(null);
+
+        // Se nao encontrou usuario com esse email, interrompe com erro.
+        if (usuario == null) {
+            throw new RuntimeException("Usuário não encontrado.");
+        }
+
+        // Se encontrou o usuario, agora compara a senha enviada com a senha salva.
+        if (!usuario.getSenha().equals(dto.getSenha())) {
+            throw new RuntimeException("Senha inválida.");
+        }
+
+        // Se email e senha estiverem corretos, devolve os dados da resposta de login.
+        return new LoginResponseDTO(
+                "Login realizado com sucesso.",
+                usuario.getId(),
+                usuario.getNome());
     }
 
     // Metodo auxiliar.

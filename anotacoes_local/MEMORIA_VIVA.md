@@ -32,10 +32,13 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 ```text
 README.md
 src/main/java/br/com/edbruno/apiusuarios/ApiusuariosApplication.java
+src/main/java/br/com/edbruno/apiusuarios/controller/AuthController.java
 src/main/java/br/com/edbruno/apiusuarios/controller/HelloController.java
 src/main/java/br/com/edbruno/apiusuarios/controller/GlobalExceptionHandler.java
 src/main/java/br/com/edbruno/apiusuarios/controller/UsuarioController.java
 src/main/java/br/com/edbruno/apiusuarios/dto/ErroValidacaoDTO.java
+src/main/java/br/com/edbruno/apiusuarios/dto/LoginRequestDTO.java
+src/main/java/br/com/edbruno/apiusuarios/dto/LoginResponseDTO.java
 src/main/java/br/com/edbruno/apiusuarios/dto/UsuarioRequestDTO.java
 src/main/java/br/com/edbruno/apiusuarios/dto/UsuarioResponseDTO.java
 src/main/java/br/com/edbruno/apiusuarios/model/Usuario.java
@@ -54,9 +57,11 @@ pom.xml
 - Endpoint atual de estudo: `GET /nome` retorna `Edbruno`.
 - Endpoint atual de estudo: `GET /mensagem` retorna `Estou aprendendo Spring Boot`.
 - Existe um controller de usuarios: `UsuarioController`.
+- Existe um controller de autenticacao: `AuthController`.
 - Existe um service inicial de usuarios: `UsuarioService`.
 - Existe um repository inicial de usuarios: `UsuarioRepository`.
 - Existem DTOs iniciais de usuarios: `UsuarioRequestDTO` e `UsuarioResponseDTO`.
+- Existem DTOs de login: `LoginRequestDTO` e `LoginResponseDTO`.
 - Existe um DTO de erro de validacao: `ErroValidacaoDTO`.
 - Existe um handler global de erro: `GlobalExceptionHandler`.
 - `UsuarioRequestDTO` agora possui validacoes com `@NotBlank`, `@Email` e `@Size`.
@@ -65,14 +70,17 @@ pom.xml
 - Endpoint atual de estudo: `POST /usuarios` recebe `UsuarioRequestDTO`, salva e retorna `201 CREATED` com `UsuarioResponseDTO`.
 - Endpoint atual de estudo: `PUT /usuarios/{id}` recebe `UsuarioRequestDTO`, atualiza nome/email e retorna `200 OK` ou `404 NOT FOUND`.
 - Endpoint atual de estudo: `DELETE /usuarios/{id}` remove usuario e retorna `204 NO CONTENT` ou `404 NOT FOUND`.
+- Endpoint atual de estudo: `POST /auth/login` recebe email e senha e retorna os dados basicos do usuario quando o login da certo.
 - Modelo atual: `Usuario` com `id`, `nome`, `email` e `senha`.
 - O modelo `Usuario` esta marcado como entidade JPA com `@Entity`.
 - O campo `id` do `Usuario` esta marcado com `@Id` e `@GeneratedValue`.
 - Existe apenas o teste de contexto `contextLoads()`.
 - Observacao: o `UsuarioController` delega as operacoes de usuarios para o `UsuarioService`.
 - Observacao: o `UsuarioService` delega acesso a dados para `UsuarioRepository`.
+- Observacao: o `UsuarioRepository` agora possui `findByEmail(String email)` para buscar usuario pelo email.
 - Observacao: o `UsuarioController` usa `ResponseEntity` para controlar status HTTP e corpo da resposta.
 - Observacao: no fluxo atual, o service recebe `UsuarioRequestDTO`, trabalha internamente com `Usuario` e devolve `UsuarioResponseDTO`.
+- Observacao: no fluxo de login, o service recebe `LoginRequestDTO` e devolve `LoginResponseDTO`.
 - Observacao: os DTOs ajudam a separar o que entra e o que sai da API do model interno.
 - Observacao: o `UsuarioController` usa `@Valid` para pedir ao Spring a validacao do `UsuarioRequestDTO`.
 - Observacao: com a dependencia de validation, o Spring pode bloquear requests invalidos antes de entrar no service.
@@ -84,6 +92,7 @@ pom.xml
 - Observacao importante: o model `Usuario` agora possui o campo `senha`.
 - Observacao importante: no comportamento atual, a `senha` recebida no request esta sendo persistida no model.
 - Observacao importante: a `senha` nao volta no `UsuarioResponseDTO`, entao nao e exposta na resposta da API.
+- Observacao importante: no login atual, se email ou senha estiverem errados, o `UsuarioService` lanca `RuntimeException`.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida

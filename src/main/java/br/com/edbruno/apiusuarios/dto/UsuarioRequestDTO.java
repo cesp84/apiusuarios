@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 // DTO de entrada.
-// Esta classe representa os dados que a API recebe no body.
+// Representa os dados que a API recebe no corpo da requisicao.
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,7 +36,7 @@ public class UsuarioRequestDTO {
     private String nome;
 
     // O email e obrigatorio.
-    // Tambem precisa estar em formato valido de email.
+    // Tambem precisa estar em formato valido.
     @NotBlank(message = "O email é obrigatório.")
     @Email(message = "O email informado é inválido.")
     private String email;

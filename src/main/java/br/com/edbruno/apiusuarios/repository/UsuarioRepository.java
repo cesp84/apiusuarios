@@ -13,5 +13,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 //
 // Usuario = tipo do objeto que sera salvo no banco.
 // Long = tipo do id do Usuario.
+//
+// Como estamos usando JpaRepository, varios metodos ja vem prontos.
+// Exemplo: findAll(), findById(), save() e deleteById().
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 }

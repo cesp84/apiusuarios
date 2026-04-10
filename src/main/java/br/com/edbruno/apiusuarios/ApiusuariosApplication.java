@@ -1,6 +1,10 @@
 package br.com.edbruno.apiusuarios;
 
+// Classe usada para iniciar a aplicacao Spring Boot.
 import org.springframework.boot.SpringApplication;
+
+// Anotacao principal do Spring Boot.
+// Ela liga a configuracao automatica e a leitura dos componentes do projeto.
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 // Diz ao Spring Boot: esta e a classe principal da aplicacao.

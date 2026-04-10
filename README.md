@@ -9,7 +9,7 @@ Este projeto nasceu como um estudo pratico de backend, mas esta sendo organizado
 Em desenvolvimento.
 
 No momento, a API possui endpoints simples para validar o funcionamento do Spring Boot e praticar os primeiros conceitos de controllers REST.
-Tambem possui um primeiro controller de usuarios com cadastro temporario em memoria.
+Tambem possui um CRUD inicial de usuarios com H2 em memoria, DTOs, validacao de entrada e tratamento global de erros.
 
 ## Objetivo do Projeto
 
@@ -22,6 +22,9 @@ A evolucao planejada inclui cadastro, consulta, atualizacao e remocao de usuario
 - Java 17
 - Spring Boot 3.5.13
 - Spring Web
+- Spring Data JPA
+- Spring Validation
+- H2 Database
 - Spring Boot DevTools
 - Lombok
 - Maven
@@ -32,7 +35,10 @@ A evolucao planejada inclui cadastro, consulta, atualizacao e remocao de usuario
 - Criacao de uma aplicacao Spring Boot
 - Criacao de controllers REST
 - Mapeamento de endpoints com `@GetMapping`
-- Organizacao inicial de uma API Java
+- Separacao entre controller, service, repository e DTOs
+- Validacao de entrada com `@Valid`, `@NotBlank`, `@Email` e `@Size`
+- Tratamento global de erro com `@RestControllerAdvice`
+- Persistencia em banco H2
 - Uso do Maven para executar e testar o projeto
 - Documentacao progressiva enquanto o projeto evolui
 
@@ -48,9 +54,16 @@ apiusuarios/
     |   |   +-- ApiusuariosApplication.java
     |   |   +-- controller/
     |   |       +-- HelloController.java
+    |   |       +-- GlobalExceptionHandler.java
     |   |       +-- UsuarioController.java
+    |   |   +-- dto/
+    |   |       +-- ErroValidacaoDTO.java
+    |   |       +-- UsuarioRequestDTO.java
+    |   |       +-- UsuarioResponseDTO.java
     |   |   +-- model/
     |   |       +-- Usuario.java
+    |   |   +-- repository/
+    |   |       +-- UsuarioRepository.java
     |   |   +-- service/
     |   |       +-- UsuarioService.java
     |   +-- resources/
@@ -88,13 +101,19 @@ http://localhost:8080
 GET /usuarios
 ```
 
-Resposta inicial:
+Resposta quando houver usuarios:
 
 ```json
-[]
+[
+  {
+    "id": 1,
+    "nome": "Edbruno",
+    "email": "edbruno@email.com"
+  }
+]
 ```
 
-### Criar usuario em memoria
+### Criar usuario
 
 ```http
 POST /usuarios
@@ -105,16 +124,20 @@ Exemplo de corpo da requisicao:
 
 ```json
 {
-  "id": 1,
   "nome": "Edbruno",
-  "email": "edbruno@email.com"
+  "email": "edbruno@email.com",
+  "senha": "123456"
 }
 ```
 
 Resposta atual:
 
-```text
-Usuário criado com sucesso
+```json
+{
+  "id": 1,
+  "nome": "Edbruno",
+  "email": "edbruno@email.com"
+}
 ```
 
 ### Buscar usuario por id
@@ -133,7 +156,7 @@ Resposta quando encontrar:
 }
 ```
 
-### Atualizar usuario em memoria
+### Atualizar usuario
 
 ```http
 PUT /usuarios/1
@@ -145,17 +168,22 @@ Exemplo de corpo da requisicao:
 ```json
 {
   "nome": "Edbruno Silva",
-  "email": "edbruno.silva@email.com"
+  "email": "edbruno.silva@email.com",
+  "senha": "12345678"
 }
 ```
 
 Resposta atual:
 
-```text
-Usuário atualizado com sucesso
+```json
+{
+  "id": 1,
+  "nome": "Edbruno Silva",
+  "email": "edbruno.silva@email.com"
+}
 ```
 
-### Remover usuario em memoria
+### Remover usuario
 
 ```http
 DELETE /usuarios/1
@@ -164,7 +192,7 @@ DELETE /usuarios/1
 Resposta atual:
 
 ```text
-Usuário removido com sucesso
+204 No Content
 ```
 
 ### Verificar resposta do Spring Boot
@@ -217,6 +245,53 @@ Para fazer uma verificacao completa, especialmente depois de alterar dependencia
 ./mvnw clean install
 ```
 
+## Banco H2
+
+O projeto usa H2 em memoria para estudo.
+
+Console do H2:
+
+```text
+http://localhost:8080/h2-console
+```
+
+Dados de conexao:
+
+```text
+JDBC URL: jdbc:h2:mem:apiusuarios
+User: sa
+Password: deixar vazio
+```
+
+Observacao:
+
+- por estar em memoria, os dados somem quando a aplicacao reinicia
+
+## Validacao e Erros
+
+O projeto valida o `UsuarioRequestDTO` com:
+
+- `@NotBlank`
+- `@Email`
+- `@Size`
+
+Quando a validacao falha:
+
+- o Spring bloqueia a requisicao
+- o `GlobalExceptionHandler` captura o erro
+- a API devolve `400 BAD REQUEST`
+
+Exemplo de resposta:
+
+```json
+[
+  {
+    "campo": "email",
+    "mensagem": "O email informado é inválido."
+  }
+]
+```
+
 ## Observacao Sobre Desenvolvimento
 
 O projeto usa `spring-boot-devtools`.
@@ -242,18 +317,18 @@ Para estudar/editar no VS Code, instale a extensao `Lombok Annotations Support f
 - [x] Criar endpoints simples de estudo
 - [x] Criar controller de usuarios
 - [x] Criar modelo de usuario
-- [x] Criar cadastro temporario em memoria
-- [x] Criar listagem temporaria de usuarios
-- [x] Criar busca temporaria por id
-- [x] Criar atualizacao temporaria
-- [x] Criar remocao temporaria
+- [x] Criar cadastro inicial de usuarios
+- [x] Criar listagem de usuarios
+- [x] Criar busca por id
+- [x] Criar atualizacao
+- [x] Criar remocao
 - [x] Criar service inicial de usuarios
 - [x] Mover regras iniciais do controller para o service
-- [ ] Criar repository de usuarios
-- [ ] Configurar persistencia
-- [ ] Implementar CRUD de usuarios
-- [ ] Adicionar validacoes de entrada
-- [ ] Padronizar respostas de erro
+- [x] Criar repository de usuarios
+- [x] Configurar persistencia
+- [x] Implementar CRUD de usuarios
+- [x] Adicionar validacoes de entrada
+- [x] Padronizar respostas de erro
 - [ ] Ampliar testes automatizados
 
 ## Nota

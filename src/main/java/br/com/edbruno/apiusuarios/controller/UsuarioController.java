@@ -43,10 +43,13 @@ public class UsuarioController {
     // Devolve uma lista de UsuarioResponseDTO.
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDTO>> listar() {
+
+        // Responde 200 OK com a lista de usuarios no corpo.
         return ResponseEntity.ok(usuarioService.listar());
     }
 
     // Endpoint GET /usuarios/{id}
+    // Busca um usuario pelo id.
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.buscarPorId(id);
@@ -56,6 +59,7 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
 
+        // Se encontrou, responde 200 OK com o usuario no corpo.
         return ResponseEntity.ok(usuario);
     }
 
@@ -64,6 +68,8 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<UsuarioResponseDTO> criar(@RequestBody @Valid UsuarioRequestDTO dto) {
         UsuarioResponseDTO usuarioSalvo = usuarioService.criar(dto);
+
+        // Se criou com sucesso, responde 201 CREATED com o usuario salvo.
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
@@ -76,10 +82,12 @@ public class UsuarioController {
 
         UsuarioResponseDTO usuarioAtualizado = usuarioService.atualizar(id, dto);
 
+        // Se nao encontrou, responde 404.
         if (usuarioAtualizado == null) {
             return ResponseEntity.notFound().build();
         }
 
+        // Se atualizou, responde 200 OK com o usuario atualizado.
         return ResponseEntity.ok(usuarioAtualizado);
     }
 

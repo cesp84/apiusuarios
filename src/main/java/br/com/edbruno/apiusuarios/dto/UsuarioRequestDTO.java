@@ -1,32 +1,49 @@
 package br.com.edbruno.apiusuarios.dto;
 
-// Diz ao Lombok: cria construtor com todos os campos.
+// Valida se o email tem formato de email.
+import jakarta.validation.constraints.Email;
+
+// Valida se o campo nao veio vazio ou so com espacos.
+import jakarta.validation.constraints.NotBlank;
+
+// Valida tamanho minimo e maximo do texto.
+import jakarta.validation.constraints.Size;
+
+// Lombok cria construtor com todos os campos.
 import lombok.AllArgsConstructor;
 
-// Diz ao Lombok: cria os metodos get.
+// Lombok cria os metodos get.
 import lombok.Getter;
 
-// Diz ao Lombok: cria construtor vazio.
+// Lombok cria construtor vazio.
 import lombok.NoArgsConstructor;
 
-// Diz ao Lombok: cria os metodos set.
+// Lombok cria os metodos set.
 import lombok.Setter;
 
 // DTO de entrada.
-// Esta classe representa os dados que a API recebe no corpo da requisicao.
+// Esta classe representa os dados que a API recebe no body.
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioRequestDTO {
 
-    // Nome recebido no JSON.
+    // O nome e obrigatorio.
+    // Tambem precisa ter entre 3 e 100 caracteres.
+    @NotBlank(message = "O nome é obrigatório.")
+    @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres.")
     private String nome;
 
-    // Email recebido no JSON.
+    // O email e obrigatorio.
+    // Tambem precisa estar em formato valido de email.
+    @NotBlank(message = "O email é obrigatório.")
+    @Email(message = "O email informado é inválido.")
     private String email;
 
-    // Senha recebida no JSON.
-    // Observacao importante: no estado atual do projeto, a senha ainda nao esta sendo salva no model.
+    // A senha e obrigatoria.
+    // Tambem precisa ter entre 6 e 50 caracteres.
+    @NotBlank(message = "A senha é obrigatória.")
+    @Size(min = 6, max = 50, message = "A senha deve ter entre 6 e 50 caracteres.")
     private String senha;
 }

@@ -24,6 +24,7 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 - `lombok`
 - `spring-boot-starter-data-jpa`
 - `h2`
+- `spring-boot-starter-validation`
 - `spring-boot-starter-test`
 
 ## Estrutura observada
@@ -54,6 +55,7 @@ pom.xml
 - Existe um service inicial de usuarios: `UsuarioService`.
 - Existe um repository inicial de usuarios: `UsuarioRepository`.
 - Existem DTOs iniciais de usuarios: `UsuarioRequestDTO` e `UsuarioResponseDTO`.
+- `UsuarioRequestDTO` agora possui validacoes com `@NotBlank`, `@Email` e `@Size`.
 - Endpoint atual de estudo: `GET /usuarios` retorna uma lista de `UsuarioResponseDTO`.
 - Endpoint atual de estudo: `GET /usuarios/{id}` retorna `200 OK` com `UsuarioResponseDTO` ou `404 NOT FOUND`.
 - Endpoint atual de estudo: `POST /usuarios` recebe `UsuarioRequestDTO`, salva e retorna `201 CREATED` com `UsuarioResponseDTO`.
@@ -68,11 +70,14 @@ pom.xml
 - Observacao: o `UsuarioController` usa `ResponseEntity` para controlar status HTTP e corpo da resposta.
 - Observacao: no fluxo atual, o service recebe `UsuarioRequestDTO`, trabalha internamente com `Usuario` e devolve `UsuarioResponseDTO`.
 - Observacao: os DTOs ajudam a separar o que entra e o que sai da API do model interno.
+- Observacao: o `UsuarioController` usa `@Valid` para pedir ao Spring a validacao do `UsuarioRequestDTO`.
+- Observacao: com a dependencia de validation, o Spring pode bloquear requests invalidos antes de entrar no service.
 - Observacao: configuracao atual aponta para H2 em memoria: `jdbc:h2:mem:apiusuarios`.
 - Observacao: por enquanto, o H2 esta em memoria e os dados sao perdidos ao reiniciar a aplicacao.
 - Observacao: o service ainda usa `null` quando nao encontra usuario, mas o controller converte esse caso para `404 NOT FOUND`.
-- Observacao importante: `UsuarioRequestDTO` ja possui o campo `senha`, mas o model `Usuario` ainda nao possui esse campo.
-- Observacao importante: no comportamento atual, a `senha` recebida no request nao esta sendo persistida nem devolvida na resposta.
+- Observacao importante: o model `Usuario` agora possui o campo `senha`.
+- Observacao importante: no comportamento atual, a `senha` recebida no request esta sendo persistida no model.
+- Observacao importante: a `senha` nao volta no `UsuarioResponseDTO`, entao nao e exposta na resposta da API.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
 ## Validacao conhecida

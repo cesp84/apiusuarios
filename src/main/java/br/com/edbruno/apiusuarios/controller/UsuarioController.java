@@ -9,6 +9,9 @@ import br.com.edbruno.apiusuarios.dto.UsuarioResponseDTO;
 // Importa o service que executa as operacoes.
 import br.com.edbruno.apiusuarios.service.UsuarioService;
 
+// @Valid ativa as validacoes que foram colocadas no DTO.
+import jakarta.validation.Valid;
+
 // Importa status HTTP, como 201 CREATED.
 import org.springframework.http.HttpStatus;
 
@@ -44,7 +47,6 @@ public class UsuarioController {
     }
 
     // Endpoint GET /usuarios/{id}
-    // Busca um usuario pelo id.
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable Long id) {
         UsuarioResponseDTO usuario = usuarioService.buscarPorId(id);
@@ -58,21 +60,22 @@ public class UsuarioController {
     }
 
     // Endpoint POST /usuarios
-    // Recebe um UsuarioRequestDTO e devolve um UsuarioResponseDTO.
+    // @Valid faz o Spring validar o DTO antes de chamar o service.
     @PostMapping
-    public ResponseEntity<UsuarioResponseDTO> criar(@RequestBody UsuarioRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> criar(@RequestBody @Valid UsuarioRequestDTO dto) {
         UsuarioResponseDTO usuarioSalvo = usuarioService.criar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioSalvo);
     }
 
     // Endpoint PUT /usuarios/{id}
-    // Atualiza um usuario usando o id da URL e os dados do body.
+    // @Valid faz o Spring validar o DTO antes de atualizar.
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDTO> atualizar(@PathVariable Long id,
-            @RequestBody UsuarioRequestDTO dto) {
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid UsuarioRequestDTO dto) {
+
         UsuarioResponseDTO usuarioAtualizado = usuarioService.atualizar(id, dto);
 
-        // Se nao encontrou, responde 404.
         if (usuarioAtualizado == null) {
             return ResponseEntity.notFound().build();
         }

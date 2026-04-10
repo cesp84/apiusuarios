@@ -24,6 +24,9 @@
 │   │   │                   ├── controller
 │   │   │                   │   ├── HelloController.java
 │   │   │                   │   └── UsuarioController.java
+│   │   │                   ├── dto
+│   │   │                   │   ├── UsuarioRequestDTO.java
+│   │   │                   │   └── UsuarioResponseDTO.java
 │   │   │                   ├── model
 │   │   │                   │   └── Usuario.java
 │   │   │                   ├── repository
@@ -54,6 +57,9 @@
 │   │                   ├── controller
 │   │                   │   ├── HelloController.class
 │   │                   │   └── UsuarioController.class
+│   │                   ├── dto
+│   │                   │   ├── UsuarioRequestDTO.class
+│   │                   │   └── UsuarioResponseDTO.class
 │   │                   ├── model
 │   │                   │   └── Usuario.class
 │   │                   ├── repository
@@ -88,4 +94,4 @@
 └── .vscode
     └── launch.json
 
-52 directories, 37 files
+54 directories, 41 files

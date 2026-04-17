@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "GerarChave",
+            "request": "launch",
+            "mainClass": "br.com.edbruno.apiusuarios.util.GerarChave",
+            "projectName": "apiusuarios"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiusuariosApplication<apiusuarios>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "br.com.edbruno.apiusuarios.ApiusuariosApplication",
+            "projectName": "apiusuarios",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

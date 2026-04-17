@@ -150,6 +150,8 @@ local.properties
 gradle.properties
 .settings/
 nbproject/
+.codex
+.codex/
 
 # Secrets
 secrets/

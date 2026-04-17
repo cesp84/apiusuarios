@@ -1,5 +1,1 @@
-```
-# Compiled and build artifacts
-*.class
-target/
-```
+(src/main/java/br/com/edbruno/apiusuarios/dto/LoginResponseDTO.java)

@@ -4,7 +4,7 @@
 *.obj
 *.out
 build/
-target/
+*target/
 
 # Dependencies
 .gradle/

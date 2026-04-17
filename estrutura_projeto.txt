@@ -1,4 +1,6 @@
 .
+├── anotacoes_local
+│   └── MEMORIA_VIVA.md
 ├── .codex
 ├── estrutura_projeto.txt
 ├── .gitattributes
@@ -127,4 +129,4 @@
 └── .vscode
     └── launch.json
 
-63 directories, 65 files
+64 directories, 66 files

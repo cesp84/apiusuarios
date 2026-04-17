@@ -1,1 +1,5 @@
-(src/main/java/br/com/edbruno/apiusuarios/config/SecurityConfig.java)
+```
+# Compiled and build artifacts
+*.class
+target/
+```

@@ -8,7 +8,7 @@ Use este arquivo para registrar contexto real, decisoes tecnicas, comportamento 
 
 ## Snapshot atual
 
-- Data do snapshot: 2026-04-17
+- Data e hora do snapshot: 2026-04-17 13:28:52 -03
 - Projeto: `apiusuarios`
 - Tipo: API Java com Spring Boot
 - Build: Maven Wrapper
@@ -95,6 +95,7 @@ pom.xml
 - Observacao: o `UsuarioService` segue cuidando do CRUD de usuarios.
 - Observacao: o `AuthService` agora cuida do login/autenticacao.
 - Observacao: o `UsuarioRepository` agora possui `findByEmail(String email)` para buscar usuario pelo email.
+- Observacao: o `UsuarioRepository` agora possui `existsByEmail(String email)` para validar email duplicado.
 - Observacao: o `UsuarioController` usa `ResponseEntity` para controlar status HTTP e corpo da resposta.
 - Observacao: no fluxo atual, o service recebe `UsuarioRequestDTO`, trabalha internamente com `Usuario` e devolve `UsuarioResponseDTO`.
 - Observacao: no fluxo de login, o `AuthController` chama `AuthService.login(...)`.
@@ -112,11 +113,16 @@ pom.xml
 - Observacao: as demais rotas exigem autenticacao.
 - Observacao: o `JwtAuthenticationFilter` procura o token no cabecalho `Authorization: Bearer ...`.
 - Observacao: o `CustomUserDetailsService` busca o usuario pelo email para o Spring Security.
+- Observacao: o `SecurityConfig` registra `PasswordEncoder`, `DaoAuthenticationProvider`, `AuthenticationManager` e a `SecurityFilterChain`.
 - Observacao: o service ainda usa `null` quando nao encontra usuario, mas o controller converte esse caso para `404 NOT FOUND`.
 - Observacao importante: o model `Usuario` agora possui o campo `senha`.
-- Observacao importante: no comportamento atual, a `senha` recebida no request esta sendo persistida no model.
+- Observacao importante: no comportamento atual, a senha nao e mais salva em texto puro.
+- Observacao importante: o `UsuarioService` agora usa `PasswordEncoder` para criptografar a senha antes de salvar.
 - Observacao importante: a `senha` nao volta no `UsuarioResponseDTO`, entao nao e exposta na resposta da API.
 - Observacao importante: agora o login passou a depender do Spring Security + JWT, em vez de comparacao manual simples no `UsuarioService`.
+- Observacao importante: o login atual usa `AuthenticationManager`, entao a comparacao da senha passou a ser feita pelo Spring Security.
+- Observacao importante: o cadastro e a atualizacao agora barram emails duplicados com `existsByEmail(...)`.
+- Observacao importante: o `AuthService` gera o JWT usando o email como subject do token.
 - Observacao importante: `.codex/` deve permanecer fora do versionamento.
 - O `README.md` lista os endpoints atuais e deve evoluir junto com a API.
 
@@ -125,6 +131,7 @@ pom.xml
 - `./mvnw test` passou em 2026-04-09 executando fora da sandbox restrita.
 - Observacao: dentro da sandbox restrita, o Mockito/Byte Buddy pode falhar ao inicializar por bloqueio no mecanismo de attach da JVM.
 - Essa falha de attach nao indicou problema na classe principal do Spring.
+- Observacao: `LoginResponseDTO` esta limpo e documentado no padrao atual do projeto.
 
 ## Comandos uteis
 
@@ -253,4 +260,4 @@ Quando o projeto crescer, manter responsabilidades separadas:
 - Definir o primeiro recurso da API, por exemplo `usuarios`.
 - Definir contrato HTTP: endpoint, payload de entrada, payload de saida e status.
 - Escolher estrategia de persistencia: memoria, H2, PostgreSQL, MySQL ou outra.
-- Adicionar testes focados quando o primeiro controller/service surgir.
+- Adicionar testes focados para seguranca, login JWT e CRUD autenticado.

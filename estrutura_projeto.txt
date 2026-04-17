@@ -1,9 +1,14 @@
 .
-├── anotacoes_local
-│   └── MEMORIA_VIVA.md
 ├── .codex
 ├── estrutura_projeto.txt
 ├── .gitattributes
+├── .github
+│   └── java-upgrade
+│       ├── .gitignore
+│       └── hooks
+│           └── scripts
+│               ├── recordToolUse.ps1
+│               └── recordToolUse.sh
 ├── .gitignore
 ├── HELP.md
 ├── .mvn
@@ -21,18 +26,32 @@
 │   │   │           └── edbruno
 │   │   │               └── apiusuarios
 │   │   │                   ├── ApiusuariosApplication.java
+│   │   │                   ├── config
+│   │   │                   │   └── SecurityConfig.java
 │   │   │                   ├── controller
+│   │   │                   │   ├── AuthController.java
+│   │   │                   │   ├── GlobalExceptionHandler.java
 │   │   │                   │   ├── HelloController.java
 │   │   │                   │   └── UsuarioController.java
 │   │   │                   ├── dto
+│   │   │                   │   ├── ErroValidacaoDTO.java
+│   │   │                   │   ├── LoginRequestDTO.java
+│   │   │                   │   ├── LoginResponseDTO.java
 │   │   │                   │   ├── UsuarioRequestDTO.java
 │   │   │                   │   └── UsuarioResponseDTO.java
 │   │   │                   ├── model
 │   │   │                   │   └── Usuario.java
 │   │   │                   ├── repository
 │   │   │                   │   └── UsuarioRepository.java
-│   │   │                   └── service
-│   │   │                       └── UsuarioService.java
+│   │   │                   ├── security
+│   │   │                   │   └── JwtAuthenticationFilter.java
+│   │   │                   ├── service
+│   │   │                   │   ├── AuthService.java
+│   │   │                   │   ├── CustomUserDetailsService.java
+│   │   │                   │   ├── JwtService.java
+│   │   │                   │   └── UsuarioService.java
+│   │   │                   └── util
+│   │   │                       └── GerarChave.java
 │   │   └── resources
 │   │       ├── application.properties
 │   │       ├── static
@@ -54,18 +73,32 @@
 │   │           └── edbruno
 │   │               └── apiusuarios
 │   │                   ├── ApiusuariosApplication.class
+│   │                   ├── config
+│   │                   │   └── SecurityConfig.class
 │   │                   ├── controller
+│   │                   │   ├── AuthController.class
+│   │                   │   ├── GlobalExceptionHandler.class
 │   │                   │   ├── HelloController.class
 │   │                   │   └── UsuarioController.class
 │   │                   ├── dto
+│   │                   │   ├── ErroValidacaoDTO.class
+│   │                   │   ├── LoginRequestDTO.class
+│   │                   │   ├── LoginResponseDTO.class
 │   │                   │   ├── UsuarioRequestDTO.class
 │   │                   │   └── UsuarioResponseDTO.class
 │   │                   ├── model
 │   │                   │   └── Usuario.class
 │   │                   ├── repository
 │   │                   │   └── UsuarioRepository.class
-│   │                   └── service
-│   │                       └── UsuarioService.class
+│   │                   ├── security
+│   │                   │   └── JwtAuthenticationFilter.class
+│   │                   ├── service
+│   │                   │   ├── AuthService.class
+│   │                   │   ├── CustomUserDetailsService.class
+│   │                   │   ├── JwtService.class
+│   │                   │   └── UsuarioService.class
+│   │                   └── util
+│   │                       └── GerarChave.class
 │   ├── generated-sources
 │   │   └── annotations
 │   ├── generated-test-sources
@@ -94,4 +127,4 @@
 └── .vscode
     └── launch.json
 
-54 directories, 41 files
+63 directories, 65 files

@@ -44,6 +44,7 @@
 			<optional>true</optional>
 		</dependency>
 
+		<!-- Dependencia usada para testes automatizados do Spring Boot. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -58,6 +59,7 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Adiciona JPA para trabalhar com entidades, repository e banco de dados. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -67,6 +69,38 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Adiciona recursos de seguranca/autenticacao do Spring Security. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- API principal do JWT.
+		     Aqui ficam as classes e interfaces para criar e ler tokens. -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.13.0</version>
+		</dependency>
+
+		<!-- Implementacao interna do JWT.
+		     Ela faz o funcionamento real da biblioteca em tempo de execucao. -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.13.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Integra o JWT com Jackson.
+		     Ajuda a converter dados do token para JSON e vice-versa. -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.13.0</version>
 			<scope>runtime</scope>
 		</dependency>
 

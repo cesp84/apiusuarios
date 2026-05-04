@@ -1,287 +1,167 @@
-# API Usuarios
+# 🚀 API de Usuários com Spring Boot
 
-API REST em desenvolvimento com Java e Spring Boot.
+API REST desenvolvida em Java com Spring Boot, estruturada com base em boas práticas de arquitetura em camadas, validação de entrada e tratamento padronizado de erros.
 
-Este projeto nasceu como um estudo pratico de backend, mas esta sendo organizado com cuidado para evoluir como projeto de portfolio: codigo simples, endpoints claros, documentacao objetiva e crescimento por etapas.
+O projeto evolui de forma incremental, consolidando conceitos essenciais de desenvolvimento backend moderno, com foco em organização, clareza de código e manutenibilidade.
 
-## Status
+---
 
-Em desenvolvimento.
+## 📌 Status
 
-No momento, a API possui endpoints simples para validar o funcionamento do Spring Boot e praticar os primeiros conceitos de controllers REST.
-Tambem possui um CRUD inicial de usuarios com H2 em memoria, DTOs, validacao de entrada e tratamento global de erros.
+🟡 Em desenvolvimento contínuo
 
-## Objetivo do Projeto
+Atualmente implementa um CRUD completo de usuários com persistência em banco H2, validação de dados e tratamento global de exceções.
 
-Construir, passo a passo, uma API para usuarios usando o ecossistema Spring.
+---
 
-A evolucao planejada inclui cadastro, consulta, atualizacao e remocao de usuarios, mantendo separacao entre controller, service, repository, DTOs e tratamento de erros.
+## 🎯 Objetivo
 
-## Tecnologias
+Construir uma API REST robusta e bem estruturada, aplicando:
 
-- Java 17
-- Spring Boot 3.5.13
-- Spring Web
-- Spring Data JPA
-- Spring Validation
-- H2 Database
-- Spring Boot DevTools
-- Lombok
-- Maven
-- JUnit / Spring Boot Test
+* separação de responsabilidades
+* boas práticas do ecossistema Spring
+* evolução incremental orientada a aprendizado e qualidade
 
-## O Que Este Projeto Demonstra
+---
 
-- Criacao de uma aplicacao Spring Boot
-- Criacao de controllers REST
-- Mapeamento de endpoints com `@GetMapping`
-- Separacao entre controller, service, repository e DTOs
-- Validacao de entrada com `@Valid`, `@NotBlank`, `@Email` e `@Size`
-- Tratamento global de erro com `@RestControllerAdvice`
-- Persistencia em banco H2
-- Uso do Maven para executar e testar o projeto
-- Documentacao progressiva enquanto o projeto evolui
+## 🧠 O Que Este Projeto Demonstra
 
-## Estrutura Atual
+* Criação de APIs REST com Spring Boot
+* Arquitetura em camadas (Controller, Service, Repository)
+* Uso de DTOs para desacoplamento da entidade
+* Validação de entrada com Bean Validation
+* Tratamento global de erros com `@RestControllerAdvice`
+* Persistência com Spring Data JPA
+* Organização de código voltada à manutenção
+* Testes básicos com JUnit
 
-```text
-apiusuarios/
-+-- pom.xml
-+-- README.md
-+-- src/
-    +-- main/
-    |   +-- java/br/com/edbruno/apiusuarios/
-    |   |   +-- ApiusuariosApplication.java
-    |   |   +-- controller/
-    |   |       +-- HelloController.java
-    |   |       +-- GlobalExceptionHandler.java
-    |   |       +-- UsuarioController.java
-    |   |   +-- dto/
-    |   |       +-- ErroValidacaoDTO.java
-    |   |       +-- UsuarioRequestDTO.java
-    |   |       +-- UsuarioResponseDTO.java
-    |   |   +-- model/
-    |   |       +-- Usuario.java
-    |   |   +-- repository/
-    |   |       +-- UsuarioRepository.java
-    |   |   +-- service/
-    |   |       +-- UsuarioService.java
-    |   +-- resources/
-    |       +-- application.properties
-    +-- test/
-        +-- java/br/com/edbruno/apiusuarios/
-            +-- ApiusuariosApplicationTests.java
-```
+---
 
-## Como Executar
+## 🏗️ Arquitetura
 
-Com Maven instalado:
+O projeto segue separação clara de responsabilidades:
+
+* **Controller** → entrada HTTP e exposição dos endpoints
+* **Service** → regras de negócio
+* **Repository** → acesso a dados
+* **DTOs** → comunicação entre camadas
+* **Exception Handler** → padronização de erros
+
+Essa abordagem facilita evolução, testes e manutenção.
+
+---
+
+## ⚙️ Tecnologias
+
+* Java 17
+* Spring Boot 3.5.13
+* Spring Web
+* Spring Data JPA
+* Spring Validation
+* H2 Database
+* Lombok
+* Maven
+* JUnit / Spring Boot Test
+
+---
+
+## 🚀 Como Executar
+
+### Executar com Maven
 
 ```bash
 mvn spring-boot:run
 ```
 
-Ou usando o Maven Wrapper do projeto:
+### Ou com Maven Wrapper
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Por padrao, a aplicacao sobe em:
+Aplicação disponível em:
 
 ```text
 http://localhost:8080
 ```
 
-## Endpoints Atuais
+---
 
-### Listar usuarios
+## 🔗 Endpoints
+
+### Listar usuários
 
 ```http
 GET /usuarios
 ```
 
-Resposta quando houver usuarios:
-
-```json
-[
-  {
-    "id": 1,
-    "nome": "Edbruno",
-    "email": "edbruno@email.com"
-  }
-]
-```
-
-### Criar usuario
+### Criar usuário
 
 ```http
 POST /usuarios
-Content-Type: application/json
 ```
 
-Exemplo de corpo da requisicao:
-
-```json
-{
-  "nome": "Edbruno",
-  "email": "edbruno@email.com",
-  "senha": "123456"
-}
-```
-
-Resposta atual:
-
-```json
-{
-  "id": 1,
-  "nome": "Edbruno",
-  "email": "edbruno@email.com"
-}
-```
-
-### Buscar usuario por id
+### Buscar por ID
 
 ```http
-GET /usuarios/1
+GET /usuarios/{id}
 ```
 
-Resposta quando encontrar:
-
-```json
-{
-  "id": 1,
-  "nome": "Edbruno",
-  "email": "edbruno@email.com"
-}
-```
-
-### Atualizar usuario
+### Atualizar usuário
 
 ```http
-PUT /usuarios/1
-Content-Type: application/json
+PUT /usuarios/{id}
 ```
 
-Exemplo de corpo da requisicao:
-
-```json
-{
-  "nome": "Edbruno Silva",
-  "email": "edbruno.silva@email.com",
-  "senha": "12345678"
-}
-```
-
-Resposta atual:
-
-```json
-{
-  "id": 1,
-  "nome": "Edbruno Silva",
-  "email": "edbruno.silva@email.com"
-}
-```
-
-### Remover usuario
+### Remover usuário
 
 ```http
-DELETE /usuarios/1
+DELETE /usuarios/{id}
 ```
 
-Resposta atual:
+---
 
-```text
-204 No Content
-```
-
-### Verificar resposta do Spring Boot
-
-```http
-GET /hello
-```
-
-Resposta atual:
-
-```text
-Olá, Spring Boot!
-```
-
-### Exemplo retornando um nome
-
-```http
-GET /nome
-```
-
-Resposta atual:
-
-```text
-Edbruno
-```
-
-### Exemplo retornando uma mensagem
-
-```http
-GET /mensagem
-```
-
-Resposta atual:
-
-```text
-Estou aprendendo Spring Boot
-```
-
-## Como Testar
-
-Execute:
+## 🧪 Testes
 
 ```bash
 ./mvnw test
 ```
 
-Para fazer uma verificacao completa, especialmente depois de alterar dependencias:
+Build completo:
 
 ```bash
 ./mvnw clean install
 ```
 
-## Banco H2
+---
 
-O projeto usa H2 em memoria para estudo.
+## 🗄️ Banco de Dados
 
-Console do H2:
+O projeto utiliza H2 em memória para fins de desenvolvimento.
+
+Acesso ao console:
 
 ```text
 http://localhost:8080/h2-console
 ```
 
-Dados de conexao:
+Configuração:
 
 ```text
 JDBC URL: jdbc:h2:mem:apiusuarios
 User: sa
-Password: deixar vazio
+Password: (vazio)
 ```
 
-Observacao:
+---
 
-- por estar em memoria, os dados somem quando a aplicacao reinicia
+## ⚠️ Validação e Tratamento de Erros
 
-## Validacao e Erros
+* Validação com `@NotBlank`, `@Email`, `@Size`
+* Respostas padronizadas via `@RestControllerAdvice`
+* Retorno de erros com status `400 BAD REQUEST`
 
-O projeto valida o `UsuarioRequestDTO` com:
-
-- `@NotBlank`
-- `@Email`
-- `@Size`
-
-Quando a validacao falha:
-
-- o Spring bloqueia a requisicao
-- o `GlobalExceptionHandler` captura o erro
-- a API devolve `400 BAD REQUEST`
-
-Exemplo de resposta:
+Exemplo:
 
 ```json
 [
@@ -292,47 +172,26 @@ Exemplo de resposta:
 ]
 ```
 
-## Observacao Sobre Desenvolvimento
+---
 
-O projeto usa `spring-boot-devtools`.
+## 📈 Roadmap
 
-Essa dependencia ajuda durante o desenvolvimento porque pode reiniciar a aplicacao quando o codigo muda.
+* [x] Estrutura inicial Spring Boot
+* [x] Controllers REST
+* [x] CRUD de usuários
+* [x] Camada de service
+* [x] Persistência com JPA
+* [x] Validação de entrada
+* [x] Tratamento global de erros
+* [ ] Ampliação de testes automatizados
+* [ ] Autenticação com JWT
+* [ ] Integração com banco relacional (PostgreSQL)
 
-Se a aplicacao estiver rodando e uma alteracao nao aparecer no navegador, salve o arquivo e garanta que a IDE compilou o projeto novamente.
+---
 
-## Lombok
+## 💬 Autor
 
-O projeto usa Lombok no modelo `Usuario` para reduzir codigo repetitivo.
+Desenvolvido por **Edbruno Prestes**
+📧 [edbruno.prestes@gmail.com](mailto:edbruno.prestes@gmail.com)
 
-Atualmente ele gera getters, setters, construtor vazio e construtor com todos os atributos.
-
-O Lombok nao substitui o Jackson: ele apenas gera metodos e construtores que ajudam o objeto Java a continuar funcionando normalmente.
-
-Para estudar/editar no VS Code, instale a extensao `Lombok Annotations Support for VS Code`.
-
-## Roadmap
-
-- [x] Criar projeto Spring Boot
-- [x] Criar primeiro controller REST
-- [x] Criar endpoints simples de estudo
-- [x] Criar controller de usuarios
-- [x] Criar modelo de usuario
-- [x] Criar cadastro inicial de usuarios
-- [x] Criar listagem de usuarios
-- [x] Criar busca por id
-- [x] Criar atualizacao
-- [x] Criar remocao
-- [x] Criar service inicial de usuarios
-- [x] Mover regras iniciais do controller para o service
-- [x] Criar repository de usuarios
-- [x] Configurar persistencia
-- [x] Implementar CRUD de usuarios
-- [x] Adicionar validacoes de entrada
-- [x] Padronizar respostas de erro
-- [ ] Ampliar testes automatizados
-
-## Nota
-
-Este README sera atualizado conforme o projeto evoluir.
-
-O objetivo e manter a documentacao alinhada ao comportamento real do codigo.
+Projeto focado na consolidação de práticas modernas de desenvolvimento backend com Spring Boot.
